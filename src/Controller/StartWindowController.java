@@ -8,32 +8,31 @@ import java.awt.*;
 public class StartWindowController {
     JFrame startWindowFrame;
 
-    Color playerOneColor;
-    Color playerTwoColor;
+    Color[] playerColors = new Color[4];
     String boardChoice;
 
-    public void setPlayerOneColor(Color color) {
-        playerOneColor = color;
+    public void setPlayerColor(int playerIndex, Color color) {
+        playerColors[playerIndex] = color;
     }
-    public void setPlayerTwoColor(Color color) {
-        playerTwoColor = color;
+
+    public Color getPlayerColor(int playerIndex) {
+        return playerColors[playerIndex];
     }
+
     public void setBoardChoice(String choice) {
         boardChoice = choice;
     }
+
     public boolean boardChosen() {
         return boardChoice != null;
-    }
-    public boolean colorsSet() {
-        return playerOneColor != null && playerTwoColor != null;
     }
 
     public void createStartWindow() {
         startWindowFrame = new StartWindowView(this).drawStartWindowFrame();
     }
 
-    public void startGame(String playerOneName, String playerTwoName) {
-        BoardController board = new BoardController(boardChoice, playerOneName, playerTwoName, playerOneColor, playerTwoColor);
+    public void startGame(String[] playerNames) {
+        BoardController board = new BoardController(boardChoice, playerNames, playerColors);
         board.createBoardView();
 
         startWindowFrame.dispose();
@@ -42,7 +41,5 @@ public class StartWindowController {
     public static void main(String[] args) {
         StartWindowController startWindowController = new StartWindowController();
         startWindowController.createStartWindow();
-
     }
-
 }

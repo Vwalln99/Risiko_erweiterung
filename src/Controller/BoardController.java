@@ -8,44 +8,60 @@ import View.CountryView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 public class BoardController {
-
+    private int currentPlayerIndex;
     BoardView boardView;
 
     String turn;
     private String phase = "Set Soldiers";
     String lastPhase;
 
+    //new: added dynamic players
+    private List<Player> players = new ArrayList<>();;
+    private Player currentPlayer;
+    //private int currentPlayerIndex = 0;
+
     Map<String, Country> allCountries = new HashMap<>();
     Map<String, CountryView> allCountryViews = new HashMap<>();
     Map<String, String[]> countryNeighbors = new HashMap<>();
 
     private final String boardChoice;
-    private final Player playerOne;
-    private final Player playerTwo;
-    private Player currentPlayer;
+    //private final Player player;
+    //private final Player playerTwo;
+    //private Player currentPlayer;
     public FightController fightController;
     private SendArmyController sendArmyController;
 
 
-    public BoardController(String boardChoice, String playerOneName, String playerTwoName,
-                           Color playerOneColor, Color playerTwoColor) {
-        this.boardChoice = boardChoice;
-        this.playerOne = new Player(playerOneName, playerOneColor);
-        this.playerTwo = new Player(playerTwoName, playerTwoColor);
-        this.currentPlayer = playerOne;
+    public BoardController(String boardChoice, String[] playerNames, Color[] playerColors) {
+    this.boardChoice = boardChoice;
+        int armyCount = 0;
+        if(playerNames.length == 2){
+            armyCount = 20;
+        }
+        else if(playerNames.length == 3){
+            armyCount=25;
+        } else{
+            armyCount=30;
+        }
+        for(int i =0; i< playerNames.length; i++ ){
+
+            players.add(new Player(playerNames[i], playerColors[i], armyCount));
+        }
+
+       this.currentPlayer = players.get(0);
     }
 
     public void createBoardView() {
-        System.out.println(this.playerOne.getPlayerColor());
-        System.out.println(this.playerTwo.getPlayerColor());
+        System.out.println(this.currentPlayer.getPlayerColor());
+        //System.out.println(this.playerTwo.getPlayerColor());
         boardView = new BoardView(this.boardChoice, allCountries, this, allCountryViews);
         boardView.setVisible(true);
         boardView.setCurrentPhaseLabel(getPhase());
-        turn = this.playerOne.getName() + "'s Turn";
+        turn = this.currentPlayer.getName() + "'s Turn";
         boardView.setPlayerTurnLabel(turn);
 
         setCountryNeighbors(boardChoice);
@@ -66,12 +82,20 @@ public class BoardController {
     public void setCurrentPlayer(Player newCurrentPlayer) {
         this.currentPlayer = newCurrentPlayer;
     }
-    public Player getPlayerOne() {
-        return this.playerOne;
+    //new: change player
+    public void changePlayer(){
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        setCurrentPlayer(players.get(currentPlayerIndex));
+        turn = this.currentPlayer.getName() + "'s Turn";
+        boardView.setPlayerTurnLabel(turn);
+    }
+
+   /* public Player getPlayerOne() {
+        return this.player;
     }
     public Player getPlayerTwo() {
         return this.playerTwo;
-    }
+    }*/
 
     // Depending on the board, sets the all other countries which a country can attack or send soldiers to
     public void setCountryNeighbors(String boardChoice) {
@@ -79,6 +103,7 @@ public class BoardController {
             case "board1" -> NeighborRelations.addCountryNeighbors1(countryNeighbors);
             case "board2" -> NeighborRelations.addCountryNeighbors2(countryNeighbors);
             case "board3" -> NeighborRelations.addCountryNeighbors3(countryNeighbors);
+            //TODO: add 2 new boards
         }
     }
 
@@ -116,8 +141,9 @@ public class BoardController {
     }
 
     // Logic for the first phase, where both players choose and fill their starting countries
+    //modified logic to be for more players, code cleanup
     public void placeSoldiers(Country country, CountryView view) {
-        if(turn.equals(this.playerOne.getName() + "'s Turn") && (country.getSoldiersInside() == 0 || allCountriesFilled())){
+       /* if(turn.equals(this.playerOne.getName() + "'s Turn") && (country.getSoldiersInside() == 0 || allCountriesFilled())){
             country.setOwner(this.playerOne);
             this.playerOne.removeSoldiers(1);
             country.addSoldiersInside(1);
@@ -139,31 +165,46 @@ public class BoardController {
             turn = turn.equals(this.playerOne.getName() + "'s Turn") ? this.playerTwo.getName() + "'s Turn" : this.playerOne.getName() + "'s Turn";
             this.currentPlayer = this.currentPlayer == this.playerOne ? this.playerTwo : this.playerOne;
             boardView.setPlayerTurnLabel(turn);
+*/
+        if(country.getSoldiersInside() == 0 || allCountriesFilled()){
+            country.setOwner(currentPlayer);
+            currentPlayer.removeSoldiers(1);
+            country.addSoldiersInside(1);
+            view.setSoldierLabel("Soldiers: " + country.getSoldiersInside());
+            view.setBackgroundColor(currentPlayer.getPlayerColor());
+            view.setSoldierIcons(country.getSoldiersInside());
 
+            changePlayer();
+            boardView.setPlayerTurnLabel(turn);
+
+            if(currentPlayer.getSoldiers() == 0){
+                setPhase("Attack Phase");
+                boardView.setCurrentPhaseLabel(getPhase());
+                boardView.endTurnButton.setEnabled(true);
+            }
         }
 
-        // Switches to next phase when the players have no more soldiers to place
+       /* // Switches to next phase when the players have no more soldiers to place
         if(this.playerTwo.getSoldiers() == 0) {
             setPhase("Attack Phase");
             boardView.setCurrentPhaseLabel(getPhase());
             boardView.endTurnButton.setEnabled(true);
-        }
+        }*/
     }
 
     // Setting or Unsetting an attacking and defending country for the Attack Phase
+    // modifying code for more players and code cleanup
     public void attackPhase(Country country, CountryView view) {
-        if(this.fightController.getAttackingCountry() == null && country.getOwner() == this.currentPlayer && country.getSoldiersInside() > 1) {
+        if(this.fightController.getAttackingCountry() == null && country.getOwner() == this.currentPlayer &&
+                country.getSoldiersInside() > 1) {
             this.fightController.setAttackingCountry(country);
             this.fightController.setAttackingCountryView(view);
             view.setBackgroundColor(Color.CYAN);
-        } else if (this.fightController.getAttackingCountry() != null && this.fightController.getAttackingCountry().getName().equals(country.getName())) {
+        } else if (this.fightController.getAttackingCountry() != null &&
+                this.fightController.getAttackingCountry().getName().equals(country.getName())) {
             this.fightController.setAttackingCountry(null);
             this.fightController.setAttackingCountryView(null);
-            if (this.currentPlayer == this.playerOne) {
-                view.setBackgroundColor(this.playerOne.getPlayerColor());
-            } else {
-                view.setBackgroundColor(this.playerTwo.getPlayerColor());
-            }
+            view.setBackgroundColor(this.currentPlayer.getPlayerColor());
             boardView.attackButton.setEnabled(false);
         } else if (this.fightController.getAttackingCountry() != null &&
                 this.fightController.getDefendingCountry() == null &&
@@ -176,17 +217,25 @@ public class BoardController {
         } else if (this.fightController.getDefendingCountry() != null && this.fightController.getDefendingCountry().getName().equals(country.getName())) {
             this.fightController.setDefendingCountry(null);
             this.fightController.setDefendingCountryView(null);
-            if (this.currentPlayer == this.playerOne) {
-                view.setBackgroundColor(this.playerTwo.getPlayerColor());
-            } else {
-                view.setBackgroundColor(this.playerOne.getPlayerColor());
-            }
+            view.setBackgroundColor(this.currentPlayer.getPlayerColor());
             boardView.attackButton.setEnabled(false);
         }
     }
 
     // Start the extra phase for each player after they clicked their card button with 3 or more cards
-    public void playerOneSetCardsPhase() {
+    //modified to be more versatile
+    public  void setCardPhase(Player player){
+        player.cardsToSoldiers();
+        for(Player p : players){
+        if(p == player){
+            boardView.setPlayerCardsButtonText(p.getName() + " Cards: " + p.getCards());
+        }
+        }
+        lastPhase = getPhase();
+        setPhase(player.getName() + ": Set Soldiers");
+        boardView.setCurrentPhaseLabel(player.getName() + ": Set " + player.getSoldiers() + " Soldier(s)");
+    }
+    /*public void playerOneSetCardsPhase() {
         this.playerOne.cardsToSoldiers();
         boardView.setPlayerOneCardsButtonText(this.playerOne.getName() + " Cards: " + this.playerOne.getCards());
         lastPhase = getPhase();
@@ -200,10 +249,23 @@ public class BoardController {
         lastPhase = getPhase();
         setPhase(this.playerTwo.getName() + ": Set Soldiers");
         boardView.setCurrentPhaseLabel(this.playerTwo.getName() + ": Set " + this.playerOne.getSoldiers() + " Soldier(s)");
-    }
+    }*/
 
     // Logic for the extra phase, after the card button click
-    public void playerOneSetCardTroops(Country country, CountryView view) {
+    //modified to be more versatile
+    public void setCardTroops(Player player, Country country, CountryView view) {
+        player.removeSoldiers(1);
+        country.addSoldiersInside(1);
+        view.setSoldierLabel("Soldiers: " + country.getSoldiersInside());
+        view.setSoldierIcons(country.getSoldiersInside());
+        if (player.getSoldiers() == 0) {
+            setPhase(lastPhase);
+            boardView.setCurrentPhaseLabel(getPhase());
+        } else {
+            boardView.setCurrentPhaseLabel(player.getName() + ": Set " + player.getSoldiers() + " Soldier(s)");
+        }
+    }
+    /*public void playerOneSetCardTroops(Country country, CountryView view) {
         this.playerOne.removeSoldiers(1);
         country.addSoldiersInside(1);
         view.setSoldierLabel("Soldiers: " + country.getSoldiersInside());
@@ -227,7 +289,7 @@ public class BoardController {
         } else {
             boardView.setCurrentPhaseLabel(this.playerTwo.getName() + ": Set " + this.playerTwo.getSoldiers() + " Soldier(s)");
         }
-    }
+    }*/
 
     // Setting / Unsetting a sending and receiving country and opening the Send Armies Window
     public void fortificationPhase(Country country, CountryView view) {
@@ -240,11 +302,7 @@ public class BoardController {
         } else if (this.sendArmyController.getSendingCountry() != null && this.sendArmyController.getSendingCountry().getName().equals(country.getName())) {
             this.sendArmyController.setSendingCountry(null);
             this.sendArmyController.setSendingCountryView(null);
-            if (this.currentPlayer == this.playerOne) {
-                view.setBackgroundColor(this.playerOne.getPlayerColor());
-            } else {
-                view.setBackgroundColor(this.playerTwo.getPlayerColor());
-            }
+                view.setBackgroundColor(this.currentPlayer.getPlayerColor());
         } else if (this.sendArmyController.getReceivingCountry() == null &&
                 this.sendArmyController.getSendingCountry() != null &&
                 checkIfNeighbor(this.sendArmyController.getSendingCountry().getName(), country.getName()) &&
@@ -256,15 +314,23 @@ public class BoardController {
     }
 
     // Sets new Soldiers at beginning of turn and switches to other player, when first one is done
+    //modified to be mor versatile
     public void setNewTroops(Country country, CountryView view) {
         if(country.getOwner() == this.currentPlayer) {
             country.addSoldiersInside(1);
             this.currentPlayer.removeSoldiers(1);
             view.setSoldierLabel("Soldiers: " + country.getSoldiersInside());
             view.setSoldierIcons(country.getSoldiersInside());
-            boardView.setCurrentPhaseLabel(getPhase() + " " + this.currentPlayer.getName() + " " + this.currentPlayer.getSoldiers() + " Soldier(s)");
-
-            if(this.currentPlayer == this.playerOne && this.playerOne.getSoldiers() == 0 && this.playerTwo.getSoldiers() != 0) {
+            boardView.setCurrentPhaseLabel(getPhase() + " " + this.currentPlayer.getName() + " "
+                    + this.currentPlayer.getSoldiers() + " Soldier(s)");
+            if(this.currentPlayer.getSoldiers() == 0){
+                changePlayer();
+                setPhase("New Troops Phase");
+                boardView.setCurrentPhaseLabel(getPhase() + " " + this.currentPlayer.getName() + " " +
+                        this.currentPlayer.getSoldiers() + "Soldiers");
+                this.sendArmyController.setFortifications(3);
+            }
+            /*if(this.currentPlayer == this.playerOne && this.playerOne.getSoldiers() == 0 && this.playerTwo.getSoldiers() != 0) {
                 setCurrentPlayer(this.playerTwo);
                 turn = this.currentPlayer.getName() + "'s Turn";
                 boardView.setPlayerTurnLabel(turn);
@@ -282,7 +348,7 @@ public class BoardController {
                 boardView.setPlayerTurnLabel(turn);
                 setPhase("Attack Phase");
                 boardView.setCurrentPhaseLabel(getPhase());
-            }
+            }*/
         }
     }
 
@@ -299,7 +365,11 @@ public class BoardController {
 
     public void checkIfTooManyCards() {
         // If player has more than 5 cards, he is forced to use them
+        //modified to be mor versatile
         if (this.currentPlayer.getCards() > 5) {
+            setCardPhase(this.currentPlayer);
+        }
+        /*if (this.currentPlayer.getCards() > 5) {
             if (this.currentPlayer == this.playerOne) {
                 this.playerOne.cardsToSoldiers();
                 boardView.setPlayerOneCardsButtonText(this.playerOne.getName() + " Cards: " + this.playerOne.getCards());
@@ -312,7 +382,7 @@ public class BoardController {
                 setPhase(this.playerTwo.getName() + ": Set Soldiers");
                 boardView.setCurrentPhaseLabel(this.playerTwo.getName() + ": Set " + this.playerTwo.getSoldiers() + " Soldier(s)");
             }
-        }
+        }*/
     }
 
     // Calculates the new Troops at the beginning of a turn, depending on owned countries and continents
@@ -366,12 +436,12 @@ public class BoardController {
 
 
     public void endTurn() {
-        this.currentPlayer = this.currentPlayer == this.playerOne ? this.playerTwo : this.playerOne;
+        changePlayer();
         turn = this.currentPlayer.getName() + "'s Turn";
         boardView.setPlayerTurnLabel(turn);
         setPhase("New Troops Phase");
-        getNewTroops(this.playerOne);
-        getNewTroops(this.playerTwo);
+        getNewTroops(this.currentPlayer);
+        //getNewTroops(this.playerTwo);
         boardView.setCurrentPhaseLabel(getPhase() + " " + this.currentPlayer.getName() + " " + this.currentPlayer.getSoldiers() + " Soldier(s)");
         this.sendArmyController.setFortifications(3);
     }

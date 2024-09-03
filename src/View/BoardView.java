@@ -24,8 +24,8 @@ public class BoardView extends JFrame implements ActionListener {
     public JButton attackButton;
     public JButton endTurnButton;
 
-    public JButton playerOneCards;
-    public JButton playerTwoCards;
+    public JButton[] playerCards;
+    //public JButton playerTwoCards;
 
     GridBagLayout boardLayout = new GridBagLayout();
     GridBagConstraints boardConstraints = new GridBagConstraints();
@@ -130,13 +130,13 @@ public class BoardView extends JFrame implements ActionListener {
         endTurnButton.setText(text);
     }
 
-    public void setPlayerOneCardsButtonText(String text) {
-        playerOneCards.setText(text);
+    public void setPlayerCardsButtonText(String text) {
+        playerCards.setText(text);
     }
 
-    public void setPlayerTwoCardsButtonText(String text) {
+   /* public void setPlayerTwoCardsButtonText(String text) {
         playerTwoCards.setText(text);
-    }
+    }*/
 
 
 

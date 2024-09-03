@@ -8,9 +8,9 @@ public class Player {
     private int cards;
     private final Color playerColor;
 
-    public Player(String name, Color playerColor) {
+    public Player(String name, Color playerColor, int initialSoldiers) {
         this.name = name;
-        this.soldiers = 20;
+        this.soldiers = initialSoldiers;
         this.cards = 0;
         this.playerColor = playerColor;
     }
