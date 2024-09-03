@@ -104,7 +104,7 @@ public class CountryView implements MouseListener {
                 boardController.attackPhase(country, this);
             }
             else if (boardController.getPhase().equals(boardController.getCurrentPlayer().getName() + ": Set Soldiers") && country.getOwner() == boardController.getCurrentPlayer()) {
-                boardController.playerSetCardTroops(country, this);
+                boardController.setCardTroops( country, this);
             }
             else if (boardController.getPhase().equals("Fortification Phase")) {
                 boardController.fortificationPhase(country, this);

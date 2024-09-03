@@ -20,7 +20,7 @@ public class BoardController {
     String lastPhase;
 
     //new: added dynamic players
-    private List<Player> players = new ArrayList<>();;
+    public List<Player> players = new ArrayList<>();;
     private Player currentPlayer;
     //private int currentPlayerIndex = 0;
 
@@ -228,7 +228,8 @@ public class BoardController {
         player.cardsToSoldiers();
         for(Player p : players){
         if(p == player){
-            boardView.setPlayerCardsButtonText(p.getName() + " Cards: " + p.getCards());
+            int i = 0;
+            boardView.setPlayerCardsButtonText( i,p.getName() + " Cards: " + p.getCards());
         }
         }
         lastPhase = getPhase();
@@ -253,7 +254,8 @@ public class BoardController {
 
     // Logic for the extra phase, after the card button click
     //modified to be more versatile
-    public void setCardTroops(Player player, Country country, CountryView view) {
+    public void setCardTroops(Country country, CountryView view) {
+        Player player = null;
         player.removeSoldiers(1);
         country.addSoldiersInside(1);
         view.setSoldierLabel("Soldiers: " + country.getSoldiersInside());

@@ -3,11 +3,13 @@ package View;
 import Controller.BoardController;
 import Config.Helper;
 import Model.Country;
+import Model.Player;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Map;
 
 public class BoardView extends JFrame implements ActionListener {
@@ -24,7 +26,8 @@ public class BoardView extends JFrame implements ActionListener {
     public JButton attackButton;
     public JButton endTurnButton;
 
-    public JButton[] playerCards;
+    //new: list for buttons so everything updates dynamically for up to 4 players
+    public JButton[] playerCardsButton;
     //public JButton playerTwoCards;
 
     GridBagLayout boardLayout = new GridBagLayout();
@@ -84,7 +87,18 @@ public class BoardView extends JFrame implements ActionListener {
         allContinents.setBackground(new Color(153,204,255));
 
         // Bottom row of game board
-        playerOneCards = new JButton(this.boardController.getPlayerOne().getName() + " Cards: 0" );
+        //modified for up to 4 players
+        int numberOfPlayers = boardController.players.size();
+        playerCardsButton = new JButton[numberOfPlayers];
+        for (int i = 0; i < numberOfPlayers; i++) {
+            String playerName = boardController.players.get(i).getName();
+            playerCardsButton[i] = new JButton(playerName + " Cards: 0");
+            playerCardsButton[i].setBackground(Color.ORANGE);
+            playerCardsButton[i].setOpaque(true);
+            playerCardsButton[i].addActionListener(this);
+            playerCardsButton[i].setActionCommand("playerCards_" + i);
+        }
+        /*playerOneCards = new JButton(this.boardController.getPlayerOne().getName() + " Cards: 0" );
         playerOneCards.setBackground(Color.ORANGE);
         playerOneCards.setOpaque(true);
         playerOneCards.addActionListener(this);
@@ -94,7 +108,7 @@ public class BoardView extends JFrame implements ActionListener {
         playerTwoCards.setOpaque(true);
         playerTwoCards.setBackground(Color.ORANGE);
         playerTwoCards.addActionListener(this);
-        playerTwoCards.setActionCommand("playerTwoCards");
+        playerTwoCards.setActionCommand("playerTwoCards");*/
 
         attackButton = new JButton("Attack");
         attackButton.addActionListener(this);
@@ -106,8 +120,11 @@ public class BoardView extends JFrame implements ActionListener {
         boardPanel.add(currentPhase, Helper.buildBoardConstraints(boardConstraints,0,1,1,1));
         boardPanel.add(endTurnButton, Helper.buildBoardConstraints(boardConstraints,0,2,1,1));
         boardPanel.add(allContinents, Helper.buildBoardConstraints(boardConstraints,1,0,1,3));
-        boardPanel.add(playerOneCards, Helper.buildBoardConstraints(boardConstraints,2,0,1,1));
-        boardPanel.add(playerTwoCards, Helper.buildBoardConstraints(boardConstraints,2,2,1,1));
+        /*boardPanel.add(playerOneCards, Helper.buildBoardConstraints(boardConstraints,2,0,1,1));
+        boardPanel.add(playerTwoCards, Helper.buildBoardConstraints(boardConstraints,2,2,1,1));*/
+        for (int i = 0; i < numberOfPlayers; i++) {
+            boardPanel.add(playerCardsButton[i], Helper.buildBoardConstraints(boardConstraints,2,i,1,1));
+        }
         boardPanel.add(attackButton, Helper.buildBoardConstraints(boardConstraints,2,1,1,1));
 
         boardPanel.setPreferredSize(new Dimension(FIELD_WIDTH, DICE_ROW_HEIGHT + FIELD_HEIGHT + STAT_ROW_HEIGHT));
@@ -130,8 +147,10 @@ public class BoardView extends JFrame implements ActionListener {
         endTurnButton.setText(text);
     }
 
-    public void setPlayerCardsButtonText(String text) {
-        playerCards.setText(text);
+    public void setPlayerCardsButtonText(int playerIndex, String text) {
+        if (playerIndex >= 0 && playerIndex < playerCardsButton.length) {
+            playerCardsButton[playerIndex].setText(text);
+        }
     }
 
    /* public void setPlayerTwoCardsButtonText(String text) {
@@ -142,10 +161,23 @@ public class BoardView extends JFrame implements ActionListener {
 
 
     @Override
+    //added new logic for dynamic playing
     public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand().equals("fight")) {
+       if(e.getActionCommand().equals("fight")) {
             boardController.fightController.createFightView();
         }
+        for (JButton jButton : playerCardsButton) {
+            if (e.getSource() == jButton) {
+                Player player = boardController.getCurrentPlayer();
+                if (player.getCards() >= 3 &&
+                        (boardController.getPhase().equals("Attack Phase") ||
+                                boardController.getPhase().equals("Fortification Phase"))) {
+                    boardController.setCardPhase(player);
+                }
+                return;
+            }
+        }
+       /*
         if(boardController.getCurrentPlayer() == boardController.getPlayerOne() &&
             e.getActionCommand().equals("playerOneCards") &&
             boardController.getPlayerOne().getCards() >= 3 &&
@@ -161,6 +193,7 @@ public class BoardView extends JFrame implements ActionListener {
             boardController.playerTwoSetCardsPhase();
         }
 
+*/
         if(e.getActionCommand().equals("End Phase")) {
             boardController.endPhase();
         }
