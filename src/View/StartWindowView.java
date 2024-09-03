@@ -28,6 +28,7 @@ public class StartWindowView implements ActionListener {
     JButton[] playerColorButton1 =  new JButton[4];
     JButton[] playerColorButton2 =  new JButton[4];
     JButton[] playerColorButton3 =  new JButton[4];
+    JButton[] playerColorButton4 =  new JButton[4];
 
     JButton board1;
     JButton board2;
@@ -144,10 +145,12 @@ public class StartWindowView implements ActionListener {
             playerColorButton1[playerNumber - 1] = createButton("", new Color(61, 194, 87), "player" + playerNumber + "ColorButton1");
             playerColorButton2[playerNumber - 1] = createButton("", new Color(60, 101, 195), "player" + playerNumber + "ColorButton2");
             playerColorButton3[playerNumber - 1] = createButton("", new Color(197, 60, 58), "player" + playerNumber + "ColorButton3");
+            playerColorButton4[playerNumber - 1] = createButton("", new Color(80, 60, 88), "player" + playerNumber + "ColorButton4");
 
             playerColorButtonPanel.add(playerColorButton1[playerNumber - 1]);
             playerColorButtonPanel.add(playerColorButton2[playerNumber - 1]);
             playerColorButtonPanel.add(playerColorButton3[playerNumber - 1]);
+               playerColorButtonPanel.add(playerColorButton4[playerNumber - 1]);
 
             playerPanel.add(playerHeadline);
             playerPanel.add(playerNames[playerNumber - 1]);
@@ -215,9 +218,10 @@ public class StartWindowView implements ActionListener {
     }
 
     // Highlights the first Button in given Array
-    public void highlightButton(JButton activeButton, JButton notActiveButton1, JButton notActiveButton2) {
+    public void highlightButton(JButton activeButton, JButton notActiveButton1, JButton notActiveButton2, JButton notActiveButton3) {
         notActiveButton1.setBorder(BorderFactory.createLineBorder(new Color(228, 229, 227), 2));
         notActiveButton2.setBorder(BorderFactory.createLineBorder(new Color(228, 229, 227), 2));
+        notActiveButton3.setBorder(BorderFactory.createLineBorder(new Color(228, 229, 227), 2));
         activeButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
     }
 
@@ -248,39 +252,42 @@ public class StartWindowView implements ActionListener {
             highlightButton(playerTwoColorButton3, playerTwoColorButton1, playerTwoColorButton2);
             controller.setPlayerTwoColor(playerTwoColorButton3.getBackground());
         }*/
-        if (e.getActionCommand().equals(playerCountDropdown)) {
 
+        if (e.getSource() == playerCountDropdown) {
             int playerCount = (int) playerCountDropdown.getSelectedItem();
-            for (int i = 0; i < 4; i++){
-                startWindowPanel.getComponent(2 + 1).setVisible(i < playerCount);
+
+            for (int i = 0; i < 4; i++) {
+                startWindowPanel.getComponent(2 + i).setVisible(i < playerCount);
             }
             frame.pack();
         }
         for (int i = 0; i < 4; i++) {
             if (e.getActionCommand().equals("player" + (i + 1) + "ColorButton1")) {
-                highlightButton(playerColorButton1[i], playerColorButton2[i], playerColorButton3[i]);
+                highlightButton(playerColorButton1[i], playerColorButton2[i], playerColorButton3[i], playerColorButton4[i]);
                 controller.setPlayerColor(i, playerColorButton1[i].getBackground());
             } else if (e.getActionCommand().equals("player" + (i + 1) + "ColorButton2")) {
-                highlightButton(playerColorButton2[i], playerColorButton1[i], playerColorButton3[i]);
+                highlightButton(playerColorButton2[i], playerColorButton1[i], playerColorButton3[i], playerColorButton4[i]);
                 controller.setPlayerColor(i, playerColorButton2[i].getBackground());
             } else if (e.getActionCommand().equals("player" + (i + 1) + "ColorButton3")) {
-                highlightButton(playerColorButton3[i], playerColorButton1[i], playerColorButton2[i]);
+                highlightButton(playerColorButton3[i], playerColorButton1[i], playerColorButton2[i], playerColorButton4[i]);
                 controller.setPlayerColor(i, playerColorButton3[i].getBackground());
+            } else if (e.getActionCommand().equals("player" + (i + 1) + "ColorButton4")) {
+                highlightButton(playerColorButton4[i], playerColorButton1[i], playerColorButton2[i], playerColorButton3[i]);
+                controller.setPlayerColor(i, playerColorButton4[i].getBackground());
             }
-        }
-        if (e.getActionCommand().equals("board1")) {
-            highlightButton(board1, board2, board3);
-            controller.setBoardChoice("board1");
-        }
-        if (e.getActionCommand().equals("board2")) {
-            highlightButton(board2, board1, board3);
-            controller.setBoardChoice("board2");
-        }
-        if (e.getActionCommand().equals("board3")) {
-            highlightButton(board3, board1, board2);
-            controller.setBoardChoice("board3");
-        }
-        if (e.getActionCommand().equals("startButton")){/* &&
+            if (e.getActionCommand().equals("board1")) {
+                //highlightButton(board1, board2, board3);
+                controller.setBoardChoice("board1");
+            }
+            if (e.getActionCommand().equals("board2")) {
+                //highlightButton(board2, board1, board3);
+                controller.setBoardChoice("board2");
+            }
+            if (e.getActionCommand().equals("board3")) {
+                //highlightButton(board3, board1, board2);
+                controller.setBoardChoice("board3");
+            }
+            if (e.getActionCommand().equals("startButton")) {/* &&
             controller.colorsSet() &&
             controller.boardChosen() &&
             !playerOneName.getText().isBlank() &&
@@ -289,23 +296,23 @@ public class StartWindowView implements ActionListener {
 
             controller.startGame(playerOneName.getText(), playerTwoName.getText());*/
 
-            //modified logic for more players
-            int playerCount = (int) playerCountDropdown.getSelectedItem();
-            boolean valid = true;
-            for (int i = 0; i < playerCount; i++) {
-                if (playerNames[i].getText().isBlank() || controller.getPlayerColor(i) == null) {
-                    valid = false;
-                    break;
+                //modified logic for more players
+                int playerCount = (int) playerCountDropdown.getSelectedItem();
+                boolean valid = true;
+                for (int k = 0; k < playerCount; i++) {
+                    if (playerNames[k].getText().isBlank() || controller.getPlayerColor(k) == null) {
+                        valid = false;
+                        break;
+                    }
                 }
-            }
 
-            if (valid && controller.boardChosen()) {
-                String[] playerNamesArr = new String[playerCount];
-                for (int i = 0; i < playerCount; i++) {
-                    playerNamesArr[i] = playerNames[i].getText();
+                if (valid && controller.boardChosen()) {
+                    String[] playerNamesArr = new String[playerCount];
+                    for (int j=0; j < playerCount; j++) {
+                        playerNamesArr[j] = playerNames[j].getText();
+                    }
+                    controller.startGame(playerNamesArr);
                 }
-                controller.startGame(playerNamesArr);
             }
         }
-    }
-}
+    }}
