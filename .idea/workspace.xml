@@ -30,6 +30,7 @@
     "Application.StartWindowController.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "onboarding.tips.debug.path": "C:/Users/Vanessa/IdeaProjects/Risiko_erweiterung/src/Main.java"
   }

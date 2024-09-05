@@ -72,6 +72,8 @@ public class ContinentCreator {
                 case "B" -> new Color(241,115,115);
                 case "C" -> new Color(99,189,89);
                 case "D" -> new Color(67,80,156);
+                case "E" -> new Color(120,85,10);
+                case "F" -> new Color(255,30,255);
                 default -> new Color(0,0,0);
             };
 
@@ -102,5 +104,22 @@ public class ContinentCreator {
 
         return continentPanel;
     }
+    public JPanel createBoard4(Map<String, Country> allCountries, Map<String, CountryView> allCountryViews) {
 
+        continentLayout.columnWidths = new int[] {20,20,20,20,20,20,20,20,20};//Anpassungen Bildschirm Laptop
+        continentLayout.rowHeights = new int[] {20,20,20,20,20,20,20,20};
+
+        createAndPlaceAllCountries(CountryCoordinates.allCountryPlacements4, allCountries, allCountryViews);
+
+        return continentPanel;
+    }
+    public JPanel createBoard5(Map<String, Country> allCountries, Map<String, CountryView> allCountryViews) {
+
+        continentLayout.columnWidths = new int[] {20,20,20,20,20,20,20,20}; //Anpassungen Bildschirm Laptop
+        continentLayout.rowHeights = new int[] {20,20,20,20,20,20,20};
+
+        createAndPlaceAllCountries(CountryCoordinates.allCountryPlacements5, allCountries, allCountryViews);
+
+        return continentPanel;
+    }
 }

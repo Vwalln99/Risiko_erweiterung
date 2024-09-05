@@ -83,6 +83,8 @@ public class BoardView extends JFrame implements ActionListener {
             }
             case "board2" -> allContinents = continentCreator.createBoard2(this.allCountries, this.allCountryViews);
             case "board3" -> allContinents = continentCreator.createBoard3(this.allCountries, this.allCountryViews);
+            case "board4" -> allContinents = continentCreator.createBoard4(this.allCountries, this.allCountryViews);
+            case "board5" -> allContinents = continentCreator.createBoard5(this.allCountries, this.allCountryViews);
         }
         allContinents.setBackground(new Color(153,204,255));
 
