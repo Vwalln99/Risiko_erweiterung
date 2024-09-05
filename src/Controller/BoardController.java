@@ -58,23 +58,47 @@ public class BoardController {
 
     //new: distributes territories evenly on all players
     public void assignColorsToCountries() {
-        List<Player> playerList = new ArrayList<>(players);
-        Collections.shuffle(playerList);
 
-        int playerIndex = 0;
-        for (Country country : allCountries.values()) {
-            if (playerIndex >= playerList.size()) {
-                country.setOwner(null);
-            } else {
-                country.setOwner(playerList.get(playerIndex));
-                playerIndex++;
+        if (players.isEmpty()) {
+            System.out.println("No players available for territory assignment.");
+            return;
+        }
+
+        List<Country> countryList = new ArrayList<>(allCountries.values());
+        Collections.shuffle(countryList);
+
+        int totalCountries = countryList.size();
+        int playerCount = players.size();
+        int countriesPerPlayer = totalCountries / playerCount;
+        int remainingCountries = totalCountries % playerCount;
+
+        int currentIndex = 0;
+        for (int i = 0; i < totalCountries; i++) {
+            Country country = countryList.get(i);
+            Player player = (i < countriesPerPlayer * playerCount) ? players.get(currentIndex) : null;
+            country.setOwner(player);
+
+            if (i % countriesPerPlayer == countriesPerPlayer - 1) {
+                currentIndex++;
             }
         }
-        for (Country country : allCountries.values()) {
-            allCountryViews.get(country.getName()).setBackgroundColor(country.getOwner() != null ? country.getOwner().getPlayerColor() : Color.GRAY); // Grau für neutrale Länder
+
+        for (int i = totalCountries - remainingCountries; i < totalCountries; i++) {
+            Country country = countryList.get(i);
+            country.setOwner(null);
         }
+
+        updateBoardViewColors();
     }
 
+    public void updateBoardViewColors() {
+        for (Country country : allCountries.values()) {
+            CountryView view = allCountryViews.get(country.getName());
+            if (view != null) {
+                view.setBackgroundColor(country.getOwner() != null ? country.getOwner().getPlayerColor() : Color.GRAY);
+            }
+        }
+    }
 
     public void createBoardView() {
         assignColorsToCountries();

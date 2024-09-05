@@ -125,9 +125,9 @@ public class BoardView extends JFrame implements ActionListener {
         /*boardPanel.add(playerOneCards, Helper.buildBoardConstraints(boardConstraints,2,0,1,1));
         boardPanel.add(playerTwoCards, Helper.buildBoardConstraints(boardConstraints,2,2,1,1));*/
         for (int i = 0; i < numberOfPlayers; i++) {
-            boardPanel.add(playerCardsButton[i], Helper.buildBoardConstraints(boardConstraints,2,i,1,1));
+            boardPanel.add(playerCardsButton[i], Helper.buildBoardConstraints(boardConstraints,3,i,1,1));
         }
-        boardPanel.add(attackButton, Helper.buildBoardConstraints(boardConstraints,2,numberOfPlayers,1,1));
+        boardPanel.add(attackButton, Helper.buildBoardConstraints(boardConstraints,2,1,1,1));
 
         boardPanel.setPreferredSize(new Dimension(FIELD_WIDTH, DICE_ROW_HEIGHT + FIELD_HEIGHT + STAT_ROW_HEIGHT));
         setContentPane(boardPanel);
