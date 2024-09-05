@@ -33,7 +33,8 @@ public class StartWindowView implements ActionListener {
     JButton board1;
     JButton board2;
     JButton board3;
-    //TODO: add 2 more boards
+    JButton board4;
+    JButton board5;
 
     JComboBox<Integer> playerCountDropdown;
 
@@ -168,7 +169,8 @@ public class StartWindowView implements ActionListener {
         board1 = createButton("Board 1", null, "board1");
         board2 = createButton("Board 2", null, "board2");
         board3 = createButton("Board 3", null, "board3");
-        //TODO: add 2 more boards
+        board4 = createButton("Board 4", null, "board4");
+        board5 = createButton("Board 5", null, "board5");
 
         JButton startButton = new JButton("Start Game");
         startButton.addActionListener(this);
@@ -176,6 +178,8 @@ public class StartWindowView implements ActionListener {
         buttonPanel.add(board1);
         buttonPanel.add(board2);
         buttonPanel.add(board3);
+        buttonPanel.add(board4);
+        buttonPanel.add(board5);
         boardChoicePanel.add(choice);
         boardChoicePanel.add(buttonPanel);
         boardChoicePanel.add(startButton);
@@ -287,6 +291,14 @@ public class StartWindowView implements ActionListener {
                 //highlightButton(board3, board1, board2);
                 controller.setBoardChoice("board3");
             }
+            if (e.getActionCommand().equals("board4")) {
+                //highlightButton(board3, board1, board2);
+                controller.setBoardChoice("board4");
+            }
+            if (e.getActionCommand().equals("board5")) {
+                //highlightButton(board3, board1, board2);
+                controller.setBoardChoice("board5");
+            }
             if (e.getActionCommand().equals("startButton")) {/* &&
             controller.colorsSet() &&
             controller.boardChosen() &&
@@ -299,7 +311,7 @@ public class StartWindowView implements ActionListener {
                 //modified logic for more players
                 int playerCount = (int) playerCountDropdown.getSelectedItem();
                 boolean valid = true;
-                for (int k = 0; k < playerCount; i++) {
+                for (int k = 0; k < playerCount; k++) {
                     if (playerNames[k].getText().isBlank() || controller.getPlayerColor(k) == null) {
                         valid = false;
                         break;

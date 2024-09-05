@@ -88,6 +88,8 @@ public class CountryView implements MouseListener {
                 case "B" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(241,115,115),3));
                 case "C" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(99,189,89),3));
                 case "D" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(67,80,156),3));
+                case "E" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(120,85,10),3));
+                case "F" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(255,30,255),3));
                 default -> countryPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             }
         }

@@ -53,10 +53,31 @@ public class BoardController {
         }
 
        this.currentPlayer = players.get(0);
+
     }
 
+    //new: distributes territories evenly on all players
+    public void assignColorsToCountries() {
+        List<Player> playerList = new ArrayList<>(players);
+        Collections.shuffle(playerList);
+
+        int playerIndex = 0;
+        for (Country country : allCountries.values()) {
+            if (playerIndex >= playerList.size()) {
+                country.setOwner(null);
+            } else {
+                country.setOwner(playerList.get(playerIndex));
+                playerIndex++;
+            }
+        }
+        for (Country country : allCountries.values()) {
+            allCountryViews.get(country.getName()).setBackgroundColor(country.getOwner() != null ? country.getOwner().getPlayerColor() : Color.GRAY); // Grau für neutrale Länder
+        }
+    }
+
+
     public void createBoardView() {
-        System.out.println(this.currentPlayer.getPlayerColor());
+        assignColorsToCountries();
         //System.out.println(this.playerTwo.getPlayerColor());
         boardView = new BoardView(this.boardChoice, allCountries, this, allCountryViews);
         boardView.setVisible(true);
@@ -103,7 +124,8 @@ public class BoardController {
             case "board1" -> NeighborRelations.addCountryNeighbors1(countryNeighbors);
             case "board2" -> NeighborRelations.addCountryNeighbors2(countryNeighbors);
             case "board3" -> NeighborRelations.addCountryNeighbors3(countryNeighbors);
-            //TODO: add 2 new boards
+            case "board4" -> NeighborRelations.addCountryNeighbors4(countryNeighbors);
+            case "board5" -> NeighborRelations.addCountryNeighbors5(countryNeighbors);
         }
     }
 
@@ -412,6 +434,8 @@ public class BoardController {
         int contB = 0;
         int contC = 0;
         int contD = 0;
+        int contE = 0;
+        int contF = 0;
 
         for (Country c : allCountries.values()) {
             if(c.getOwner() == player) {
@@ -428,6 +452,14 @@ public class BoardController {
                     if(contC == 6) continentsOwned++;
                 }
                 if(c.getContinent().equals("D")) {
+                    contD++;
+                    if(contD == 6) continentsOwned++;
+                }
+                if(c.getContinent().equals("E")) {
+                    contD++;
+                    if(contD == 6) continentsOwned++;
+                }
+                if(c.getContinent().equals("F")) {
                     contD++;
                     if(contD == 6) continentsOwned++;
                 }

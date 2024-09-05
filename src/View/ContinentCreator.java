@@ -21,13 +21,17 @@ public class ContinentCreator {
             "A1", "A2", "A3", "A4", "A5", "A6",
             "B1", "B2", "B3", "B4", "B5", "B6",
             "C1", "C2", "C3", "C4", "C5", "C6",
-            "D1", "D2", "D3", "D4", "D5", "D6"};
+            "D1", "D2", "D3", "D4", "D5", "D6",
+            "E1", "E2", "E3", "E4", "E5", "E6",
+            "F1", "F2", "F3", "F4", "F5", "F6"};
 
     Color[] allContinentColors = new Color[] {
             new Color(249,225,68),
             new Color(241,115,115),
             new Color(99,189,89),
-            new Color(67,80,156),};
+            new Color(67,80,156),
+            new Color(120,85,10),
+            new Color(255,30,255)};
 
     public BoardController controller;
 
@@ -104,22 +108,54 @@ public class ContinentCreator {
 
         return continentPanel;
     }
+
+    //new: added two more boards
     public JPanel createBoard4(Map<String, Country> allCountries, Map<String, CountryView> allCountryViews) {
-
-        continentLayout.columnWidths = new int[] {20,20,20,20,20,20,20,20,20};//Anpassungen Bildschirm Laptop
-        continentLayout.rowHeights = new int[] {20,20,20,20,20,20,20,20};
-
-        createAndPlaceAllCountries(CountryCoordinates.allCountryPlacements4, allCountries, allCountryViews);
-
-        return continentPanel;
-    }
-    public JPanel createBoard5(Map<String, Country> allCountries, Map<String, CountryView> allCountryViews) {
-
-        continentLayout.columnWidths = new int[] {20,20,20,20,20,20,20,20}; //Anpassungen Bildschirm Laptop
+        continentLayout.columnWidths = new int[] {20,20,20,20,20,20,20,20};
         continentLayout.rowHeights = new int[] {20,20,20,20,20,20,20};
 
-        createAndPlaceAllCountries(CountryCoordinates.allCountryPlacements5, allCountries, allCountryViews);
+        /*JPanel allContinents = new JPanel(new GridLayout(2, 3));
+        ContinentCreator continentCreator = new ContinentCreator(controller);
+        JPanel continentA = continentCreator.createBoard1("A", allCountries, allCountryViews);
+        JPanel continentB = continentCreator.createBoard1("B", allCountries, allCountryViews);
+        JPanel continentC = continentCreator.createBoard1("C", allCountries, allCountryViews);
+        JPanel continentD = continentCreator.createBoard1("D", allCountries, allCountryViews);
+        JPanel continentE = continentCreator.createBoard1("E", allCountries, allCountryViews);
 
+        allContinents.add(continentA);
+        allContinents.add(continentB);
+        allContinents.add(continentC);
+        allContinents.add(continentD);
+        allContinents.add(continentE);
+
+        return allContinents;*/
+        createAndPlaceAllCountries(CountryCoordinates.allCountryPlacements4, allCountries, allCountryViews);
         return continentPanel;
     }
+
+    public JPanel createBoard5(Map<String, Country> allCountries, Map<String, CountryView> allCountryViews) {
+        continentLayout.columnWidths = new int[] {20,20,20,20,20,20,20,20};
+        continentLayout.rowHeights = new int[] {20,20,20,20,20,20,20};
+
+        /*JPanel allContinents = new JPanel(new GridLayout(2, 3));
+        ContinentCreator continentCreator = new ContinentCreator(controller);
+        JPanel continentA = continentCreator.createBoard1("A", allCountries, allCountryViews);
+        JPanel continentB = continentCreator.createBoard1("B", allCountries, allCountryViews);
+        JPanel continentC = continentCreator.createBoard1("C", allCountries, allCountryViews);
+        JPanel continentD = continentCreator.createBoard1("D", allCountries, allCountryViews);
+        JPanel continentE = continentCreator.createBoard1("E", allCountries, allCountryViews);
+        JPanel continentF = continentCreator.createBoard1("F", allCountries, allCountryViews);
+
+        allContinents.add(continentA);
+        allContinents.add(continentB);
+        allContinents.add(continentC);
+        allContinents.add(continentD);
+        allContinents.add(continentE);
+        allContinents.add(continentF);
+
+        return allContinents;*/
+        createAndPlaceAllCountries(CountryCoordinates.allCountryPlacements5, allCountries, allCountryViews);
+        return continentPanel;
+    }
+
 }
