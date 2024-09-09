@@ -14,11 +14,11 @@ import java.util.Map;
 
 public class BoardView extends JFrame implements ActionListener {
     public static final int DICE_ROW_HEIGHT = 50;
-    public static final int ROW_WIDTH_OUTSIDE = 250;
-    public static final int ROW_WIDTH_INSIDE = 700;
-    public static final int FIELD_WIDTH = 1200;
+    public static final int ROW_WIDTH_OUTSIDE = 150;
+    public static final int ROW_WIDTH_INSIDE = 500;
+    public static final int FIELD_WIDTH = 1100;
     public static final int FIELD_HEIGHT = 700; //Anpassungen Bildschirm Laptop
-    public static final int STAT_ROW_HEIGHT = 50;
+    public static final int STAT_ROW_HEIGHT = 30;
 
     public JLabel playerTurn;
     public JLabel currentPhase;

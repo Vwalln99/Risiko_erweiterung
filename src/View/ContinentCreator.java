@@ -91,8 +91,8 @@ public class ContinentCreator {
 
     public JPanel createBoard2(Map<String, Country> allCountries, Map<String, CountryView> allCountryViews) {
         
-        continentLayout.columnWidths = new int[] {50,50,50,50,50,50,50,50}; //Anpassungen Bildschirm Laptop
-        continentLayout.rowHeights = new int[] {50,50,50,50,50,50,50};
+        continentLayout.columnWidths = new int[] {30,30,30,30,30,30,30,30}; //Anpassungen Bildschirm Laptop
+        continentLayout.rowHeights = new int[] {30,30,30,30,30,30,30};
 
         createAndPlaceAllCountries(CountryCoordinates.allCountryPlacements2, allCountries, allCountryViews);
 

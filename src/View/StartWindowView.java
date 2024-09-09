@@ -134,12 +134,12 @@ public class StartWindowView implements ActionListener {
 
 
            private JPanel createPlayerPanel(int playerNumber) {
-            JPanel playerPanel = new JPanel(new GridLayout(4, 1));
+            JPanel playerPanel = new JPanel(new GridLayout(6, 1));
             playerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             JLabel playerHeadline = new JLabel("Player " + playerNumber + " Name: ", JLabel.CENTER);
             playerNames[playerNumber - 1] = new JTextField();
             JLabel playerColorHeadline = new JLabel("Choose Player " + playerNumber + " Color: ", JLabel.CENTER);
-            JPanel playerColorButtonPanel = new JPanel(new GridLayout(1, 3));
+            JPanel playerColorButtonPanel = new JPanel(new GridLayout(1, 4));
             playerColorButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 2, 10));
 
             // create color buttons
@@ -151,12 +151,22 @@ public class StartWindowView implements ActionListener {
             playerColorButtonPanel.add(playerColorButton1[playerNumber - 1]);
             playerColorButtonPanel.add(playerColorButton2[playerNumber - 1]);
             playerColorButtonPanel.add(playerColorButton3[playerNumber - 1]);
-               playerColorButtonPanel.add(playerColorButton4[playerNumber - 1]);
+            playerColorButtonPanel.add(playerColorButton4[playerNumber - 1]);
+
+            //new: add new win conditions before the game starts
+               JLabel winConditionLabel = new JLabel("Choose your win condition: ", JLabel.CENTER);
+               JComboBox<String> winConditionDropdown = new JComboBox<>(new String[]{"Conquer 5 more Territories than the other players",
+                       "Conquer 20 Territories","Conquer continent A, B and C","Get 40 armies"});
+               winConditionDropdown.setActionCommand("winCondition" + playerNumber);
+               winConditionDropdown.addActionListener(this);
+
 
             playerPanel.add(playerHeadline);
             playerPanel.add(playerNames[playerNumber - 1]);
             playerPanel.add(playerColorHeadline);
             playerPanel.add(playerColorButtonPanel);
+            playerPanel.add(winConditionLabel);
+            playerPanel.add(winConditionDropdown);//added so every player can choose his own win condition
 
             return playerPanel;
         }
@@ -279,6 +289,13 @@ public class StartWindowView implements ActionListener {
                 highlightButton(playerColorButton4[i], playerColorButton1[i], playerColorButton2[i], playerColorButton3[i]);
                 controller.setPlayerColor(i, playerColorButton4[i].getBackground());
             }
+            if (e.getActionCommand().startsWith("winCondition")) {
+                int playerNumber = Integer.parseInt(e.getActionCommand().substring(12)) - 1;
+                String selectedCondition = String.valueOf(((JComboBox<String>) e.getSource()).getSelectedItem());
+                System.out.println(selectedCondition);
+                controller.setPlayerWinCondition(playerNumber, selectedCondition);
+            }
+
             if (e.getActionCommand().equals("board1")) {
                 //highlightButton(board1, board2, board3);
                 controller.setBoardChoice("board1");

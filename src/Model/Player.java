@@ -11,12 +11,19 @@ public class Player {
     //private int cards;
     private final Color playerColor;
     private final List<String> cards;
+    private  String winCondition;
 
-    public Player(String name, Color playerColor, int initialSoldiers) {
+
+    public Player(String name, Color playerColor, int initialSoldiers, String winCondition) {
         this.name = name;
         this.soldiers = initialSoldiers;
         this.cards = new ArrayList<String>();
         this.playerColor = playerColor;
+        this.winCondition = winCondition;
+    }
+
+    public String getWinCondition() {
+        return winCondition;
     }
 
     public String getName() {
@@ -38,6 +45,8 @@ public class Player {
     public void removeSoldiers(int soldiers) {
         this.soldiers -= soldiers;
     }
+
+
 
     public List<String> getCards() {
         return this.cards;

@@ -9,6 +9,7 @@ public class StartWindowController {
     JFrame startWindowFrame;
 
     Color[] playerColors = new Color[4];
+    String[] playerWinConditions = new String[4];
     String boardChoice;
 
     public void setPlayerColor(int playerIndex, Color color) {
@@ -17,6 +18,10 @@ public class StartWindowController {
 
     public Color getPlayerColor(int playerIndex) {
         return playerColors[playerIndex];
+    }
+
+    public void setPlayerWinCondition(int playerNumber, String selectedCondition) {
+        playerWinConditions[playerNumber] = selectedCondition;
     }
 
     public void setBoardChoice(String choice) {
@@ -32,7 +37,8 @@ public class StartWindowController {
     }
 
     public void startGame(String[] playerNames) {
-        BoardController board = new BoardController(boardChoice, playerNames, playerColors);
+        System.out.println(playerWinConditions[0]);
+        BoardController board = new BoardController(boardChoice, playerNames, playerColors, playerWinConditions);
         board.createBoardView();
 
         startWindowFrame.dispose();
@@ -42,4 +48,5 @@ public class StartWindowController {
         StartWindowController startWindowController = new StartWindowController();
         startWindowController.createStartWindow();
     }
+
 }

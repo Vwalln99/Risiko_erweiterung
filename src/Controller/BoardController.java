@@ -34,9 +34,11 @@ public class BoardController {
     //private Player currentPlayer;
     public FightController fightController;
     private SendArmyController sendArmyController;
+    private List<Country> ownedCountries;
+    private int totalArmies;
+    private String winCondition;
 
-
-    public BoardController(String boardChoice, String[] playerNames, Color[] playerColors) {
+    public BoardController(String boardChoice, String[] playerNames, Color[] playerColors, String[] playerWinCondition) {
     this.boardChoice = boardChoice;
         int armyCount = 0;
         if(playerNames.length == 2){
@@ -49,33 +51,12 @@ public class BoardController {
         }
         for(int i =0; i< playerNames.length; i++ ){
 
-            players.add(new Player(playerNames[i], playerColors[i], armyCount));
+            players.add(new Player(playerNames[i], playerColors[i], armyCount, winCondition));
         }
 
        this.currentPlayer = players.get(0);
 
     }
-
-    //new: distributes territories evenly on all players
-   /* public void assignCountriesToPlayers(List<Player> players, List<Country> countries) {
-        int playerIndex = 0;
-
-
-        List<Country> neutralCountriesList = new ArrayList<>();
-
-
-
-
-        for (int i = 0; i < neutralCountries; i++) {
-            Country country = countries.get(totalCountries - neutralCountries + i);
-            country.setOwner(null);
-            neutralCountriesList.add(country);
-        }
-    }*/
-
-
-
-
 
     public void createBoardView() {
         //System.out.println(this.playerTwo.getPlayerColor());
@@ -138,6 +119,7 @@ public class BoardController {
         }
     }
 
+    //new: distributes territories evenly on all players
     // Checks if all available countries have been chosen at beginning of game
     public boolean allCountriesFilled() {
         int totalCountries = allCountries.size();
@@ -225,6 +207,18 @@ public class BoardController {
             changePlayer();
             boardView.setPlayerTurnLabel(turn);
 
+            if(currentPlayer.getSoldiers() == 0){
+                setPhase("Attack Phase");
+                boardView.setCurrentPhaseLabel(getPhase());
+                boardView.endTurnButton.setEnabled(true);
+            }
+        }
+        if(allCountriesFilled() && country.getOwner() == currentPlayer){
+            System.out.println("here");
+            currentPlayer.removeSoldiers(1);
+            country.addSoldiersInside(1);
+            view.setSoldierLabel("Soldiers: " + country.getSoldiersInside());
+            changePlayer();
             if(currentPlayer.getSoldiers() == 0){
                 setPhase("Attack Phase");
                 boardView.setCurrentPhaseLabel(getPhase());
@@ -505,15 +499,63 @@ public class BoardController {
         boardView.setCurrentPhaseLabel(getPhase() + " " + this.currentPlayer.getName() + " " + this.currentPlayer.getSoldiers() + " Soldier(s)");
         this.sendArmyController.setFortifications(3);
     }
+    //new: added check win condition
+    public boolean checkWinCondition(){
+        System.out.println(currentPlayer.getWinCondition());
+        String temp = "Conquer 5 more Territories than the other players";
+        switch (temp){
+            case "Conquer 5 more Territories than the other players":
+                System.out.println("gefunden");
+                return hasMoreTerritoriesThanOthers();
+            case  "Conquer 20 Territories":
+                return ownedCountries.size() >= 20;
+            case "Conquer continent A, B and C":
+                return ownSpecificTerritories();
+            case "Get 40 armies":
+                return totalArmies == 40;
 
-    public void checkWin() {
-        boolean win = true;
-        for(Country country : allCountries.values()) {
-            if (country.getOwner() != currentPlayer) {
-                win = false;
-                break;
+            default:
+                System.out.println("not found");
+                return false;
+        }
+    }
+
+    public boolean hasMoreTerritoriesThanOthers(){
+        System.out.println("has more territoriies");
+        int playerTerritories = 0;
+        for(Player player : players) {
+            if (player != currentPlayer) {
+                int otherPlayerTerritories = 0;
+                for (Country country : allCountries.values()) {
+                    if (country.getOwner() == player) {
+                        otherPlayerTerritories++;
+                    }
+                }
+                if (playerTerritories + 5 <= otherPlayerTerritories) {
+                    System.out.println("trifft nicht zu");
+                    return false;
+                }
             }
         }
+        return true;
+    }
+
+    public boolean ownSpecificTerritories(){
+        List<String> specificTerritories = Arrays.asList("A", "B", "C");
+
+        for (String territoryName : specificTerritories) {
+            Country country = allCountries.get(territoryName);
+            if (country == null || country.getOwner() != this.currentPlayer) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void checkWin() {
+        System.out.println("check win");
+        boolean win = checkWinCondition();
+
         if(win) {
             JOptionPane.showMessageDialog(boardView, currentPlayer.getName() + " has won the game!");
         }
