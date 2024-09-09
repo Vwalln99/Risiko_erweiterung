@@ -57,52 +57,29 @@ public class BoardController {
     }
 
     //new: distributes territories evenly on all players
-    public void assignColorsToCountries() {
+   /* public void assignCountriesToPlayers(List<Player> players, List<Country> countries) {
+        int playerIndex = 0;
 
-        if (players.isEmpty()) {
-            System.out.println("No players available for territory assignment.");
-            return;
-        }
 
-        List<Country> countryList = new ArrayList<>(allCountries.values());
-        Collections.shuffle(countryList);
+        List<Country> neutralCountriesList = new ArrayList<>();
 
-        int totalCountries = countryList.size();
-        int playerCount = players.size();
-        int countriesPerPlayer = totalCountries / playerCount;
-        int remainingCountries = totalCountries % playerCount;
 
-        int currentIndex = 0;
-        for (int i = 0; i < totalCountries; i++) {
-            Country country = countryList.get(i);
-            Player player = (i < countriesPerPlayer * playerCount) ? players.get(currentIndex) : null;
-            country.setOwner(player);
 
-            if (i % countriesPerPlayer == countriesPerPlayer - 1) {
-                currentIndex++;
-            }
-        }
 
-        for (int i = totalCountries - remainingCountries; i < totalCountries; i++) {
-            Country country = countryList.get(i);
+        for (int i = 0; i < neutralCountries; i++) {
+            Country country = countries.get(totalCountries - neutralCountries + i);
             country.setOwner(null);
+            neutralCountriesList.add(country);
         }
+    }*/
 
-        updateBoardViewColors();
-    }
 
-    public void updateBoardViewColors() {
-        for (Country country : allCountries.values()) {
-            CountryView view = allCountryViews.get(country.getName());
-            if (view != null) {
-                view.setBackgroundColor(country.getOwner() != null ? country.getOwner().getPlayerColor() : Color.GRAY);
-            }
-        }
-    }
+
+
 
     public void createBoardView() {
-        assignColorsToCountries();
         //System.out.println(this.playerTwo.getPlayerColor());
+
         boardView = new BoardView(this.boardChoice, allCountries, this, allCountryViews);
         boardView.setVisible(true);
         boardView.setCurrentPhaseLabel(getPhase());
@@ -110,7 +87,6 @@ public class BoardController {
         boardView.setPlayerTurnLabel(turn);
 
         setCountryNeighbors(boardChoice);
-
         this.fightController = new FightController(this, boardView);
         this.sendArmyController = new SendArmyController(this, boardView);
     }
@@ -164,13 +140,38 @@ public class BoardController {
 
     // Checks if all available countries have been chosen at beginning of game
     public boolean allCountriesFilled() {
+        int totalCountries = allCountries.size();
+        int playerCount = players.size();
+        int countriesPerPlayer = totalCountries / playerCount;
+        int neutralCountries = totalCountries % playerCount;
+        int playerIndex = 0;
+        int count = 0;
         boolean allFilled = true;
         for (Country c : allCountries.values()) {
             if (c.getOwner() == null) {
-                allFilled = false;
-                break;
+                count++;
             }
         }
+        if(count > neutralCountries){
+            allFilled = false;
+
+        }
+        System.out.println(count  +" "+" "+ neutralCountries);
+        for (int i = 0; i < totalCountries; i++) {
+            Player currentPlayer = players.get(playerIndex);
+            Country country = allCountries.get(i);
+
+            //country.setOwner(currentPlayer);
+
+            //changePlayer();
+
+
+        }
+        /*List<Country> neutralCountriesList = new ArrayList<>();
+        for (int i = 0; i < neutralCountries; i++) {
+            Country country = countries.get(totalCountries - neutralCountries + i);
+            country.setOwner(null);
+            neutralCountriesList.add(country);*/
         return allFilled;
     }
 
@@ -212,7 +213,8 @@ public class BoardController {
             this.currentPlayer = this.currentPlayer == this.playerOne ? this.playerTwo : this.playerOne;
             boardView.setPlayerTurnLabel(turn);
 */
-        if(country.getSoldiersInside() == 0 || allCountriesFilled()){
+        if(country.getSoldiersInside() == 0 && !allCountriesFilled()){
+            System.out.println(country.getSoldiersInside() + " "+ !allCountriesFilled());
             country.setOwner(currentPlayer);
             currentPlayer.removeSoldiers(1);
             country.addSoldiersInside(1);
@@ -271,7 +273,7 @@ public class BoardController {
     // Start the extra phase for each player after they clicked their card button with 3 or more cards
     //modified to be more versatile
     public  void setCardPhase(Player player){
-        player.cardsToSoldiers();
+        player.receiveRandomCard();
         for(Player p : players){
         if(p == player){
             int i = 0;
@@ -413,8 +415,8 @@ public class BoardController {
 
     public void checkIfTooManyCards() {
         // If player has more than 5 cards, he is forced to use them
-        //modified to be mor versatile
-        if (this.currentPlayer.getCards() > 5) {
+        //modified to be more versatile
+        if (this.currentPlayer.getCards().size() > 5) {
             setCardPhase(this.currentPlayer);
         }
         /*if (this.currentPlayer.getCards() > 5) {

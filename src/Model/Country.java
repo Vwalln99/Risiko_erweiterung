@@ -6,6 +6,7 @@ public class Country {
     private Player owner;
     private final String continent;
     private int soldiersSend;
+    private Player player;
 
     public Country(String name, String continent) {
         this.name = name;
@@ -13,6 +14,7 @@ public class Country {
         this.continent = continent;
         this.soldiersSend = 0;
         this.owner = null;
+        this.player = null;
     }
 
     public String getName() {
@@ -28,7 +30,18 @@ public class Country {
     }
 
     public void removeSoldiersInside(int soldiers) {
+
         this.soldiersInside -= soldiers;
+
+        //new: give up territory and make it neutral
+        if (this.soldiersInside < 0) {
+            this.soldiersInside = 0;
+        }
+
+        if (this.soldiersInside == 0) {
+            this.player = null;
+            System.out.println(this.name + " gave up their territory. Now it's neutral.");
+        }
     }
     public void setSoldiersInside(int soldiers) {
         this.soldiersInside = soldiers;

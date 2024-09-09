@@ -33,7 +33,6 @@ public class StartWindowController {
 
     public void startGame(String[] playerNames) {
         BoardController board = new BoardController(boardChoice, playerNames, playerColors);
-        board.assignColorsToCountries();
         board.createBoardView();
 
         startWindowFrame.dispose();

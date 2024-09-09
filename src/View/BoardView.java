@@ -171,7 +171,7 @@ public class BoardView extends JFrame implements ActionListener {
         for (JButton jButton : playerCardsButton) {
             if (e.getSource() == jButton) {
                 Player player = boardController.getCurrentPlayer();
-                if (player.getCards() >= 3 &&
+                if (player.getCards().size() >= 3 &&
                         (boardController.getPhase().equals("Attack Phase") ||
                                 boardController.getPhase().equals("Fortification Phase"))) {
                     boardController.setCardPhase(player);

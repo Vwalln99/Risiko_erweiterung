@@ -129,9 +129,10 @@ public class FightController {
             defendingCountry.addSoldiersInside(attackingCountry.getSoldiersInside() - 1);
             attackingCountry.setSoldiersInside(1);
 
-            boardController.getCurrentPlayer().addCards(1);
+            boardController.getCurrentPlayer().receiveRandomCard();
+            boardController.getCurrentPlayer().checkAndTradeCards();
             int i = 0;
-            boardView.setPlayerCardsButtonText(i,boardController.getCurrentPlayer().getName() + " Cards: " + boardController.getCurrentPlayer().getCards());
+            boardView.setPlayerCardsButtonText(i,boardController.getCurrentPlayer().getName() + " Cards: " + boardController.getCurrentPlayer().getCards().size());
 
         }
 
