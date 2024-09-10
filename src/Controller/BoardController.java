@@ -238,7 +238,7 @@ public class BoardController {
     // modifying code for more players and code cleanup
     public void attackPhase(Country country, CountryView view) {
         if(this.fightController.getAttackingCountry() == null && country.getOwner() == this.currentPlayer &&
-                country.getSoldiersInside() > 1) {
+                country.getSoldiersInside() >= 1) {
             this.fightController.setAttackingCountry(country);
             this.fightController.setAttackingCountryView(view);
             view.setBackgroundColor(Color.CYAN);
@@ -261,6 +261,7 @@ public class BoardController {
             this.fightController.setDefendingCountryView(null);
             view.setBackgroundColor(this.currentPlayer.getPlayerColor());
             boardView.attackButton.setEnabled(false);
+            changePlayer();
         }
     }
 
@@ -338,7 +339,7 @@ public class BoardController {
     // Setting / Unsetting a sending and receiving country and opening the Send Armies Window
     public void fortificationPhase(Country country, CountryView view) {
         if(this.sendArmyController.getSendingCountry() == null &&
-                country.getSoldiersInside() > 1 &&
+                country.getSoldiersInside() >= 1 &&
                 country.getOwner() == this.currentPlayer) {
             this.sendArmyController.setSendingCountry(country);
             this.sendArmyController.setSendingCountryView(view);
@@ -361,18 +362,21 @@ public class BoardController {
     //modified to be mor versatile
     public void setNewTroops(Country country, CountryView view) {
         if(country.getOwner() == this.currentPlayer) {
-            country.addSoldiersInside(1);
-            this.currentPlayer.removeSoldiers(1);
-            view.setSoldierLabel("Soldiers: " + country.getSoldiersInside());
-            view.setSoldierIcons(country.getSoldiersInside());
-            boardView.setCurrentPhaseLabel(getPhase() + " " + this.currentPlayer.getName() + " "
-                    + this.currentPlayer.getSoldiers() + " Soldier(s)");
+            if(this.currentPlayer.getSoldiers() > 0){
+                country.addSoldiersInside(1);
+                this.currentPlayer.removeSoldiers(1);
+                view.setSoldierLabel("Soldiers: " + country.getSoldiersInside());
+                view.setSoldierIcons(country.getSoldiersInside());
+                boardView.setCurrentPhaseLabel(getPhase() + " " + this.currentPlayer.getName() + " "
+                        + this.currentPlayer.getSoldiers() + " Soldier(s)");
+            }
             if(this.currentPlayer.getSoldiers() == 0){
                 changePlayer();
                 setPhase("New Troops Phase");
                 boardView.setCurrentPhaseLabel(getPhase() + " " + this.currentPlayer.getName() + " " +
                         this.currentPlayer.getSoldiers() + "Soldiers");
                 this.sendArmyController.setFortifications(3);
+                endTurn();
             }
             /*if(this.currentPlayer == this.playerOne && this.playerOne.getSoldiers() == 0 && this.playerTwo.getSoldiers() != 0) {
                 setCurrentPlayer(this.playerTwo);
@@ -401,9 +405,14 @@ public class BoardController {
             setPhase("Fortification Phase");
             boardView.setCurrentPhaseLabel("Fortifications: " + this.sendArmyController.getFortifications() + " Left");
             boardView.setEndTurnButtonText("End Turn");
+            endTurn();
         }
         else if(getPhase().equals("Fortification Phase")) {
-            endTurn();
+            if (this.sendArmyController.getFortifications() > 0) {
+                boardView.setCurrentPhaseLabel("Fortifications: " + this.sendArmyController.getFortifications() + " Left");
+            }else{
+                endTurn();
+            }
         }
     }
 
@@ -521,7 +530,7 @@ public class BoardController {
     }
 
     public boolean hasMoreTerritoriesThanOthers(){
-        System.out.println("has more territoriies");
+        System.out.println("has more territories");
         int playerTerritories = 0;
         for(Player player : players) {
             if (player != currentPlayer) {

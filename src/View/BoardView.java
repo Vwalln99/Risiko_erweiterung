@@ -15,9 +15,9 @@ import java.util.Map;
 public class BoardView extends JFrame implements ActionListener {
     public static final int DICE_ROW_HEIGHT = 50;
     public static final int ROW_WIDTH_OUTSIDE = 150;
-    public static final int ROW_WIDTH_INSIDE = 500;
-    public static final int FIELD_WIDTH = 1100;
-    public static final int FIELD_HEIGHT = 700; //Anpassungen Bildschirm Laptop
+    public static final int ROW_WIDTH_INSIDE = 1000;
+    public static final int FIELD_WIDTH = 1400;
+    public static final int FIELD_HEIGHT = 500; //Anpassungen Bildschirm Laptop
     public static final int STAT_ROW_HEIGHT = 30;
 
     public JLabel playerTurn;
@@ -44,7 +44,7 @@ public class BoardView extends JFrame implements ActionListener {
         this.boardController = boardController;
         this.allCountryViews = allCountryViews;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+        setResizable(true);
 
         boardLayout.columnWidths = new int[] {ROW_WIDTH_OUTSIDE, ROW_WIDTH_INSIDE, ROW_WIDTH_OUTSIDE};
         boardLayout.rowHeights = new int[] {DICE_ROW_HEIGHT, FIELD_HEIGHT, STAT_ROW_HEIGHT};
@@ -129,7 +129,7 @@ public class BoardView extends JFrame implements ActionListener {
         }
         boardPanel.add(attackButton, Helper.buildBoardConstraints(boardConstraints,2,1,1,1));
 
-        boardPanel.setPreferredSize(new Dimension(FIELD_WIDTH, DICE_ROW_HEIGHT + FIELD_HEIGHT + STAT_ROW_HEIGHT));
+        boardPanel.setPreferredSize(new Dimension(FIELD_WIDTH, DICE_ROW_HEIGHT + FIELD_HEIGHT + STAT_ROW_HEIGHT + 30));
         setContentPane(boardPanel);
 
         pack();

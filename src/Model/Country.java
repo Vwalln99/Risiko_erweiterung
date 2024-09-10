@@ -26,7 +26,9 @@ public class Country {
     }
 
     public void addSoldiersInside(int soldiers) {
-        this.soldiersInside += soldiers;
+        if(soldiers >0 ) {
+            this.soldiersInside += soldiers;
+        }
     }
 
     public void removeSoldiersInside(int soldiers) {

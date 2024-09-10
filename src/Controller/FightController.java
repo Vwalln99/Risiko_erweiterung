@@ -75,6 +75,11 @@ public class FightController {
         return (int)(Math.random() * 6) + 1;
     }
 
+    //new: neutral countries defense dice
+    public int rollDefenseDice() {
+        return (int)(Math.random() * 2) + 1;
+    }
+
     // Rolls a dice for every attacker and defender and sorts them from high to low
     public void fight(FightView view) {
         Integer[] a_dice = new Integer[attackingSoldiers];
@@ -85,8 +90,15 @@ public class FightController {
         view.setAttackerDiceLabel("Attacker Roll: " + Helper.setLabelContent(a_dice));
 
         Integer[] d_dice = new Integer[defendingSoldiers];
-        for (int i = 0; i < defendingSoldiers; i++) {
-            d_dice[i] = rollDice();
+        if (defendingCountry.getOwner() == null) {
+            // Neutral territory defense
+            d_dice = new Integer[1];
+            d_dice[0] = rollDefenseDice();
+        } else {
+            // Normal territory defense
+            for (int i = 0; i < defendingSoldiers; i++) {
+                d_dice[i] = rollDice();
+            }
         }
         Arrays.sort(d_dice, Collections.reverseOrder());
         view.setDefenderDiceLabel("Defender Roll: " + Helper.setLabelContent(d_dice));
@@ -119,6 +131,19 @@ public class FightController {
 
         view.setAttackerLosses("Attacker loses: " + attackerLosses + " Soldier(s)");
         view.setDefenderLosses("Defender loses: " + defenderLosses + " Soldier(s)");
+
+        //new: added logic for neutral countries
+        if(defendingCountry.getSoldiersInside() == 0){
+            if(defendingCountry.getOwner() == null){
+                attackingCountry.setOwner(boardController.getCurrentPlayer());
+                defendingCountry.setOwner(boardController.getCurrentPlayer());
+                defendingCountry.addSoldiersInside(attackingCountry.getSoldiersInside() - 1);
+                attackingCountry.setSoldiersInside(1);
+
+                boardController.getCurrentPlayer().receiveRandomCard();
+                boardController.getCurrentPlayer().checkAndTradeCards();
+            }
+        }
     }
 
     // Updates the state of the countries after an attack

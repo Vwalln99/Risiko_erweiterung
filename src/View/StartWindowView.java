@@ -13,6 +13,7 @@ public class StartWindowView implements ActionListener {
     public static final int NAME_HEIGHT = 150;
     public static final int BOARD_CHOICE_HEIGHT = 150;
     public static final int PLAYER_NAME_WIDTH = 250;
+    public static final int DROPDOWN_HEIGHT = 30;
 
     JFrame frame;
 
@@ -25,10 +26,10 @@ public class StartWindowView implements ActionListener {
     JButton playerTwoColorButton1;
     JButton playerTwoColorButton2;
     JButton playerTwoColorButton3;*/
-    JButton[] playerColorButton1 =  new JButton[4];
-    JButton[] playerColorButton2 =  new JButton[4];
-    JButton[] playerColorButton3 =  new JButton[4];
-    JButton[] playerColorButton4 =  new JButton[4];
+    JButton[] playerColorButton1 = new JButton[4];
+    JButton[] playerColorButton2 = new JButton[4];
+    JButton[] playerColorButton3 = new JButton[4];
+    JButton[] playerColorButton4 = new JButton[4];
 
     JButton board1;
     JButton board2;
@@ -51,17 +52,17 @@ public class StartWindowView implements ActionListener {
     public JFrame drawStartWindowFrame() {
         frame = new JFrame("Risk");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400,400);
+        frame.setSize(400, 400);
         frame.setResizable(false);
 
-        startWindowLayout.rowHeights = new int[] { HEADLINE_HEIGHT, NAME_HEIGHT, BOARD_CHOICE_HEIGHT};
-        startWindowLayout.columnWidths = new int[] { PLAYER_NAME_WIDTH, PLAYER_NAME_WIDTH};
+        startWindowLayout.rowHeights = new int[]{HEADLINE_HEIGHT, DROPDOWN_HEIGHT, NAME_HEIGHT, BOARD_CHOICE_HEIGHT};
+        startWindowLayout.columnWidths = new int[]{PLAYER_NAME_WIDTH, PLAYER_NAME_WIDTH};
 
         JLabel headline = new JLabel("Risk", JLabel.CENTER);
         headline.setFont(new Font(headline.getFont().getName(), Font.PLAIN, 20));
 
 //new: Dropdown
-        JPanel playerCountPanel = new JPanel(new GridLayout(1,2));
+        JPanel playerCountPanel = new JPanel(new GridLayout(1, 2));
         JLabel playerCountLabel = new JLabel("Number of Players:", JLabel.CENTER);
         playerCountDropdown = new JComboBox<>(new Integer[]{2, 3, 4});
         playerCountDropdown.addActionListener(this);
@@ -109,9 +110,9 @@ public class StartWindowView implements ActionListener {
         playerTwoPanel.add(playerTwoColorButtonPanel);*/
 
         //new: modify logic for more player, code cleanup
-        for(int i = 0; i < 4; i++){
-            JPanel playerPanel = createPlayerPanel(i +1);
-            startWindowPanel.add(playerPanel, Helper.buildBoardConstraints(startWindowConstraints, 2 + i, 0,1,2));
+        for (int i = 0; i < 4; i++) {
+            JPanel playerPanel = createPlayerPanel(i + 1);
+            startWindowPanel.add(playerPanel, Helper.buildBoardConstraints(startWindowConstraints, 2 + i, 0, 1, 2));
             playerPanel.setVisible(i < 2);
         }
         JPanel boardChoicePanel = createBoardChoicePanel();
@@ -133,43 +134,43 @@ public class StartWindowView implements ActionListener {
         board3 = createButton("Board 3", null, "board3");*/
 
 
-           private JPanel createPlayerPanel(int playerNumber) {
-            JPanel playerPanel = new JPanel(new GridLayout(6, 1));
-            playerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            JLabel playerHeadline = new JLabel("Player " + playerNumber + " Name: ", JLabel.CENTER);
-            playerNames[playerNumber - 1] = new JTextField();
-            JLabel playerColorHeadline = new JLabel("Choose Player " + playerNumber + " Color: ", JLabel.CENTER);
-            JPanel playerColorButtonPanel = new JPanel(new GridLayout(1, 4));
-            playerColorButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 2, 10));
+    private JPanel createPlayerPanel(int playerNumber) {
+        JPanel playerPanel = new JPanel(new GridLayout(6, 1));
+        playerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        JLabel playerHeadline = new JLabel("Player " + playerNumber + " Name: ", JLabel.CENTER);
+        playerNames[playerNumber - 1] = new JTextField();
+        JLabel playerColorHeadline = new JLabel("Choose Player " + playerNumber + " Color: ", JLabel.CENTER);
+        JPanel playerColorButtonPanel = new JPanel(new GridLayout(1, 4));
+        playerColorButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 2, 10));
 
-            // create color buttons
-            playerColorButton1[playerNumber - 1] = createButton("", new Color(61, 194, 87), "player" + playerNumber + "ColorButton1");
-            playerColorButton2[playerNumber - 1] = createButton("", new Color(60, 101, 195), "player" + playerNumber + "ColorButton2");
-            playerColorButton3[playerNumber - 1] = createButton("", new Color(197, 60, 58), "player" + playerNumber + "ColorButton3");
-            playerColorButton4[playerNumber - 1] = createButton("", new Color(80, 60, 88), "player" + playerNumber + "ColorButton4");
+        // create color buttons
+        playerColorButton1[playerNumber - 1] = createButton("", new Color(61, 194, 87), "player" + playerNumber + "ColorButton1");
+        playerColorButton2[playerNumber - 1] = createButton("", new Color(60, 101, 195), "player" + playerNumber + "ColorButton2");
+        playerColorButton3[playerNumber - 1] = createButton("", new Color(197, 60, 58), "player" + playerNumber + "ColorButton3");
+        playerColorButton4[playerNumber - 1] = createButton("", new Color(80, 60, 88), "player" + playerNumber + "ColorButton4");
 
-            playerColorButtonPanel.add(playerColorButton1[playerNumber - 1]);
-            playerColorButtonPanel.add(playerColorButton2[playerNumber - 1]);
-            playerColorButtonPanel.add(playerColorButton3[playerNumber - 1]);
-            playerColorButtonPanel.add(playerColorButton4[playerNumber - 1]);
+        playerColorButtonPanel.add(playerColorButton1[playerNumber - 1]);
+        playerColorButtonPanel.add(playerColorButton2[playerNumber - 1]);
+        playerColorButtonPanel.add(playerColorButton3[playerNumber - 1]);
+        playerColorButtonPanel.add(playerColorButton4[playerNumber - 1]);
 
-            //new: add new win conditions before the game starts
-               JLabel winConditionLabel = new JLabel("Choose your win condition: ", JLabel.CENTER);
-               JComboBox<String> winConditionDropdown = new JComboBox<>(new String[]{"Conquer 5 more Territories than the other players",
-                       "Conquer 20 Territories","Conquer continent A, B and C","Get 40 armies"});
-               winConditionDropdown.setActionCommand("winCondition" + playerNumber);
-               winConditionDropdown.addActionListener(this);
+        //new: add new win conditions before the game starts
+        JLabel winConditionLabel = new JLabel("Choose your win condition: ", JLabel.CENTER);
+        JComboBox<String> winConditionDropdown = new JComboBox<>(new String[]{"Conquer 5 more Territories than the other players",
+                "Conquer 20 Territories", "Conquer continent A, B and C", "Get 40 armies"});
+        winConditionDropdown.setActionCommand("winCondition" + playerNumber);
+        winConditionDropdown.addActionListener(this);
 
 
-            playerPanel.add(playerHeadline);
-            playerPanel.add(playerNames[playerNumber - 1]);
-            playerPanel.add(playerColorHeadline);
-            playerPanel.add(playerColorButtonPanel);
-            playerPanel.add(winConditionLabel);
-            playerPanel.add(winConditionDropdown);//added so every player can choose his own win condition
+        playerPanel.add(playerHeadline);
+        playerPanel.add(playerNames[playerNumber - 1]);
+        playerPanel.add(playerColorHeadline);
+        playerPanel.add(playerColorButtonPanel);
+        playerPanel.add(winConditionLabel);
+        playerPanel.add(winConditionDropdown);//added so every player can choose his own win condition
 
-            return playerPanel;
-        }
+        return playerPanel;
+    }
 
     private JPanel createBoardChoicePanel() {
         JPanel boardChoicePanel = new JPanel(new GridLayout(3, 1));
@@ -337,11 +338,12 @@ public class StartWindowView implements ActionListener {
 
                 if (valid && controller.boardChosen()) {
                     String[] playerNamesArr = new String[playerCount];
-                    for (int j=0; j < playerCount; j++) {
+                    for (int j = 0; j < playerCount; j++) {
                         playerNamesArr[j] = playerNames[j].getText();
                     }
                     controller.startGame(playerNamesArr);
                 }
             }
         }
-    }}
+    }
+}

@@ -35,10 +35,15 @@ public class StartWindowController {
     public void createStartWindow() {
         startWindowFrame = new StartWindowView(this).drawStartWindowFrame();
     }
-
+    private boolean boardCreated = false;
     public void startGame(String[] playerNames) {
+        if (boardCreated) {
+            return;
+        }
         System.out.println(playerWinConditions[0]);
+        boardCreated = true;
         BoardController board = new BoardController(boardChoice, playerNames, playerColors, playerWinConditions);
+        System.out.println("board wird erstellt");
         board.createBoardView();
 
         startWindowFrame.dispose();

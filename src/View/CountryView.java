@@ -28,7 +28,7 @@ public class CountryView implements MouseListener {
     }
 
     public JPanel createCountry(Color borderColor, String countryName) {
-        countryLayout.rowHeights = new int[] {10,10,10};
+        countryLayout.rowHeights = new int[] {20,20,20};
         countryLayout.columnWidths = new int[] {80};
 
         countryPanel.add(new JLabel(countryName, JLabel.CENTER), Helper.buildBoardConstraints(countryConstraints, 0,0,1,1));
