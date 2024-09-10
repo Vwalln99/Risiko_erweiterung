@@ -157,5 +157,28 @@ public class ContinentCreator {
         createAndPlaceAllCountries(CountryCoordinates.allCountryPlacements5, allCountries, allCountryViews);
         return continentPanel;
     }
+    public JPanel createBoard6(Map<String, Country> allCountries, Map<String, CountryView> allCountryViews) {
+        continentLayout.columnWidths = new int[] {20,20,20,20,20,20,20,20};
+        continentLayout.rowHeights = new int[] {20,20,20,20,20,20,20};
 
+        /*JPanel allContinents = new JPanel(new GridLayout(2, 3));
+        ContinentCreator continentCreator = new ContinentCreator(controller);
+        JPanel continentA = continentCreator.createBoard1("A", allCountries, allCountryViews);
+        JPanel continentB = continentCreator.createBoard1("B", allCountries, allCountryViews);
+        JPanel continentC = continentCreator.createBoard1("C", allCountries, allCountryViews);
+        JPanel continentD = continentCreator.createBoard1("D", allCountries, allCountryViews);
+        JPanel continentE = continentCreator.createBoard1("E", allCountries, allCountryViews);
+        JPanel continentF = continentCreator.createBoard1("F", allCountries, allCountryViews);
+
+        allContinents.add(continentA);
+        allContinents.add(continentB);
+        allContinents.add(continentC);
+        allContinents.add(continentD);
+        allContinents.add(continentE);
+        allContinents.add(continentF);
+
+        return allContinents;*/
+        createAndPlaceAllCountries(CountryCoordinates.allCountryPlacements6, allCountries, allCountryViews);
+        return continentPanel;
+    }
 }

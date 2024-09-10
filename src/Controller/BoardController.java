@@ -124,6 +124,7 @@ public class BoardController {
             case "board3" -> NeighborRelations.addCountryNeighbors3(countryNeighbors);
             case "board4" -> NeighborRelations.addCountryNeighbors4(countryNeighbors);
             case "board5" -> NeighborRelations.addCountryNeighbors5(countryNeighbors);
+            case "board6" -> NeighborRelations.addCountryNeighbors6(countryNeighbors);
         }
     }
 
@@ -278,6 +279,7 @@ public class BoardController {
             this.fightController.setDefendingCountryView(null);
             view.setBackgroundColor(this.currentPlayer.getPlayerColor());
             boardView.attackButton.setEnabled(false);
+            endPhase();
         }
 
     }
@@ -376,7 +378,7 @@ public class BoardController {
     }
 
     // Sets new Soldiers at beginning of turn and switches to other player, when first one is done
-    //modified to be mor versatile
+    //modified to be more versatile
     public void setNewTroops(Country country, CountryView view) {
         if(country.getOwner() == this.currentPlayer) {
             if(this.currentPlayer.getSoldiers() > 0){

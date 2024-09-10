@@ -178,5 +178,28 @@ public class NeighborRelations {
         countryNeighbors.put("F5", new String[] {"E5", "F4", "F6"});
         countryNeighbors.put("F6", new String[] {"E6", "F5"});
     }
+    //Board 6 testboard
+    public static void addCountryNeighbors6(Map<String, String[]> countryNeighbors) {
+        countryNeighbors.put("A1", new String[] {"A2", "B1", "C1"});
+        countryNeighbors.put("A2", new String[] {"A1", "A3", "B2"});
+        countryNeighbors.put("A3", new String[] {"A2", "A4", "B3"});
+        countryNeighbors.put("A4", new String[] {"A3", "A5", "B4"});
+        countryNeighbors.put("A5", new String[] {"A4", "A6", "B5"});
+        countryNeighbors.put("A6", new String[] {"A5", "B6"});
 
+        countryNeighbors.put("B1", new String[] {"A1", "B2", "C1"});
+        countryNeighbors.put("B2", new String[] {"A2", "B1", "B3", "C2"});
+        countryNeighbors.put("B3", new String[] {"A3", "B2", "B4", "C3"});
+        countryNeighbors.put("B4", new String[] {"A4", "B3", "B5", "C4"});
+        countryNeighbors.put("B5", new String[] {"A5", "B4", "B6", "C5"});
+        countryNeighbors.put("B6", new String[] {"A6", "B5", "C6"});
+
+        countryNeighbors.put("C1", new String[] {"A1", "B1", "C2", "D1"});
+        countryNeighbors.put("C2", new String[] {"B2", "C1", "C3", "D2"});
+        countryNeighbors.put("C3", new String[] {"B3", "C2", "C4", "D3"});
+        countryNeighbors.put("C4", new String[] {"B4", "C3", "C5", "D4"});
+        countryNeighbors.put("C5", new String[] {"B5", "C4", "C6", "D5"});
+        countryNeighbors.put("C6", new String[] {"B6", "C5", "D6"});
+
+    }
 }

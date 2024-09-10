@@ -36,6 +36,7 @@ public class StartWindowView implements ActionListener {
     JButton board3;
     JButton board4;
     JButton board5;
+    JButton board6;
 
     JComboBox<Integer> playerCountDropdown;
 
@@ -182,6 +183,7 @@ public class StartWindowView implements ActionListener {
         board3 = createButton("Board 3", null, "board3");
         board4 = createButton("Board 4", null, "board4");
         board5 = createButton("Board 5", null, "board5");
+        board6 = createButton("Board 6", null, "board6");
 
         JButton startButton = new JButton("Start Game");
         startButton.addActionListener(this);
@@ -191,6 +193,7 @@ public class StartWindowView implements ActionListener {
         buttonPanel.add(board3);
         buttonPanel.add(board4);
         buttonPanel.add(board5);
+        buttonPanel.add(board6);
         boardChoicePanel.add(choice);
         boardChoicePanel.add(buttonPanel);
         boardChoicePanel.add(startButton);
@@ -316,6 +319,10 @@ public class StartWindowView implements ActionListener {
             if (e.getActionCommand().equals("board5")) {
                 //highlightButton(board3, board1, board2);
                 controller.setBoardChoice("board5");
+            }
+            if (e.getActionCommand().equals("board6")) {
+                //highlightButton(board3, board1, board2);
+                controller.setBoardChoice("board6");
             }
             if (e.getActionCommand().equals("startButton")) {/* &&
             controller.colorsSet() &&
