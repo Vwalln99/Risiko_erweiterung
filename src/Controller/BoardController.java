@@ -90,6 +90,23 @@ public class BoardController {
         setCurrentPlayer(players.get(currentPlayerIndex));
         turn = this.currentPlayer.getName() + "'s Turn";
         boardView.setPlayerTurnLabel(turn);
+
+        if (this.fightController.getAttackingCountry() != null) {
+            this.fightController.setAttackingCountry(null);
+            this.fightController.setAttackingCountryView(null);
+            if (this.fightController.getAttackingCountryView() != null) {
+                this.fightController.getAttackingCountryView().setBackgroundColor(this.currentPlayer.getPlayerColor());
+            }
+        }
+
+        if (this.fightController.getDefendingCountry() != null) {
+            this.fightController.setDefendingCountry(null);
+            this.fightController.setDefendingCountryView(null);
+            if (this.fightController.getDefendingCountryView() != null) {
+                this.fightController.getDefendingCountryView().setBackgroundColor(this.currentPlayer.getPlayerColor());
+            }
+        }
+        boardView.attackButton.setEnabled(false);
     }
 
    /* public Player getPlayerOne() {
@@ -261,8 +278,8 @@ public class BoardController {
             this.fightController.setDefendingCountryView(null);
             view.setBackgroundColor(this.currentPlayer.getPlayerColor());
             boardView.attackButton.setEnabled(false);
-            changePlayer();
         }
+
     }
 
     // Start the extra phase for each player after they clicked their card button with 3 or more cards
@@ -340,7 +357,7 @@ public class BoardController {
     public void fortificationPhase(Country country, CountryView view) {
         if(this.sendArmyController.getSendingCountry() == null &&
                 country.getSoldiersInside() >= 1 &&
-                country.getOwner() == this.currentPlayer) {
+                country.getOwner() == this.currentPlayer && this.currentPlayer.getSoldiers() > 0) {
             this.sendArmyController.setSendingCountry(country);
             this.sendArmyController.setSendingCountryView(view);
             view.setBackgroundColor(Color.MAGENTA);
@@ -371,12 +388,13 @@ public class BoardController {
                         + this.currentPlayer.getSoldiers() + " Soldier(s)");
             }
             if(this.currentPlayer.getSoldiers() == 0){
-                changePlayer();
-                setPhase("New Troops Phase");
+                //changePlayer();
+                setPhase("Attack Phase");
                 boardView.setCurrentPhaseLabel(getPhase() + " " + this.currentPlayer.getName() + " " +
                         this.currentPlayer.getSoldiers() + "Soldiers");
                 this.sendArmyController.setFortifications(3);
-                endTurn();
+                boardView.setCurrentPhaseLabel(getPhase());
+                boardView.endTurnButton.setEnabled(true);
             }
             /*if(this.currentPlayer == this.playerOne && this.playerOne.getSoldiers() == 0 && this.playerTwo.getSoldiers() != 0) {
                 setCurrentPlayer(this.playerTwo);

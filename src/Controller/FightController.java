@@ -172,4 +172,13 @@ public class FightController {
         attackingCountry = null;
         defendingCountry = null;
     }
+
+    public CountryView getAttackingCountryView() {
+        return attackingCountryView;
+    }
+
+    public CountryView getDefendingCountryView() {
+        return defendingCountryView;
+    }
+
 }
