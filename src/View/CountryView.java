@@ -11,7 +11,7 @@ import java.awt.event.MouseListener;
 
 public class CountryView implements MouseListener {
 
-    JLabel soldierLabel;
+    //JLabel soldierLabel;
     JLabel soldierIconLabel;
     ImageIcon soldierIcon = new ImageIcon(System.getProperty("user.dir") + "\\src\\Images\\soldier_icon.png");
 
@@ -28,20 +28,20 @@ public class CountryView implements MouseListener {
     }
 
     public JPanel createCountry(Color borderColor, String countryName) {
-        countryLayout.rowHeights = new int[] {20,20,20};
+        countryLayout.rowHeights = new int[] {30,30,30};
         countryLayout.columnWidths = new int[] {80};
 
         countryPanel.add(new JLabel(countryName, JLabel.CENTER), Helper.buildBoardConstraints(countryConstraints, 0,0,1,1));
 
-        soldierLabel = new JLabel("Soldiers: 0");
+        /*soldierLabel = new JLabel();
         soldierLabel.setHorizontalAlignment(SwingConstants.CENTER);
         soldierLabel.setVerticalAlignment(SwingConstants.TOP);
-        countryPanel.add(soldierLabel, Helper.buildBoardConstraints(countryConstraints, 1,0,1,1));
+        countryPanel.add(soldierLabel, Helper.buildBoardConstraints(countryConstraints, 1,0,2,1));*/
 
         soldierIconLabel = new JLabel();
         soldierIconLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        soldierIconLabel.setVerticalAlignment(SwingConstants.TOP);
-        countryPanel.add(soldierIconLabel, Helper.buildBoardConstraints(countryConstraints, 2,0,2,1));
+        soldierIconLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+        countryPanel.add(soldierIconLabel, Helper.buildBoardConstraints(countryConstraints, 2,0,1,1));
 
         countryPanel.setBorder(BorderFactory.createLineBorder(borderColor, 3));
         countryPanel.setOpaque(true);
@@ -51,27 +51,43 @@ public class CountryView implements MouseListener {
     }
 
     // Updates the country after fights and fortifications
+    //new: layout and neutral countries
+
+    public void removeSoldierIcons() {
+        soldierIconLabel.removeAll();
+        countryPanel.revalidate();
+        countryPanel.repaint();
+    }
+
+
     public void updateCountryPanel() {
-        setSoldierLabel("Soldiers: " + country.getSoldiersInside());
+        /*setSoldierLabel("Soldiers: " + country.getSoldiersInside());
         if(country.getOwner() == boardController.getCurrentPlayer()) {
             setBackgroundColor(boardController.getCurrentPlayer().getPlayerColor());
         }
+        setSoldierIcons(country.getSoldiersInside());*/
         setSoldierIcons(country.getSoldiersInside());
+        if (country.getOwner() == null) {
+            setBackgroundColor(Color.GRAY);
+            removeSoldierIcons();
+        } else {
+            setBackgroundColor(country.getOwner().getPlayerColor());
+        }
     }
 
-    public void setSoldierLabel(String text) {
+   /* public void setSoldierLabel(String text) {
         soldierLabel.setText(text);
-    }
+    }*/
 
     public void setSoldierIcons(int soldiersInside) {
         countryPanel.remove(soldierIconLabel);
         soldierIconLabel = new JLabel();
-        soldierIconLabel.setLayout(new GridLayout(2,10));
+        soldierIconLabel.setLayout(new GridLayout(5,10));
         for (int i = 0; i < soldiersInside; i++) {
             JLabel icon = new JLabel(soldierIcon);
             soldierIconLabel.add(icon);
         }
-        countryPanel.add(soldierIconLabel, Helper.buildBoardConstraints(countryConstraints, 2, 0, 2, 1));
+        countryPanel.add(soldierIconLabel, Helper.buildBoardConstraints(countryConstraints, 1, 0, 2, 1));
     }
 
     public void setBackgroundColor(Color color) {
@@ -84,12 +100,12 @@ public class CountryView implements MouseListener {
             countryPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, 4));
         } else {
             switch (country.getContinent()) {
-                case "A" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(249,225,68), 3));
-                case "B" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(241,115,115),3));
-                case "C" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(99,189,89),3));
+                case "A" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(99, 89, 17), 3));
+                case "B" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(106, 21, 21),3));
+                case "C" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(21, 89, 14),3));
                 case "D" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(67,80,156),3));
                 case "E" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(120,85,10),3));
-                case "F" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(255,30,255),3));
+                case "F" -> countryPanel.setBorder(BorderFactory.createLineBorder(new Color(96, 8, 96),3));
                 default -> countryPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             }
         }

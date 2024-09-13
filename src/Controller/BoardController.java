@@ -90,7 +90,6 @@ public class BoardController {
         setCurrentPlayer(players.get(currentPlayerIndex));
         turn = this.currentPlayer.getName() + "'s Turn";
         boardView.setPlayerTurnLabel(turn);
-
         if (this.fightController.getAttackingCountry() != null) {
             this.fightController.setAttackingCountry(null);
             this.fightController.setAttackingCountryView(null);
@@ -218,7 +217,7 @@ public class BoardController {
             country.setOwner(currentPlayer);
             currentPlayer.removeSoldiers(1);
             country.addSoldiersInside(1);
-            view.setSoldierLabel("Soldiers: " + country.getSoldiersInside());
+            view.setSoldierIcons( country.getSoldiersInside());
             view.setBackgroundColor(currentPlayer.getPlayerColor());
             view.setSoldierIcons(country.getSoldiersInside());
 
@@ -235,7 +234,7 @@ public class BoardController {
             System.out.println("here");
             currentPlayer.removeSoldiers(1);
             country.addSoldiersInside(1);
-            view.setSoldierLabel("Soldiers: " + country.getSoldiersInside());
+            view.setSoldierIcons( country.getSoldiersInside());
             changePlayer();
             if(currentPlayer.getSoldiers() == 0){
                 setPhase("Attack Phase");
@@ -320,7 +319,7 @@ public class BoardController {
         Player player = null;
         player.removeSoldiers(1);
         country.addSoldiersInside(1);
-        view.setSoldierLabel("Soldiers: " + country.getSoldiersInside());
+        view.setSoldierIcons(country.getSoldiersInside());
         view.setSoldierIcons(country.getSoldiersInside());
         if (player.getSoldiers() == 0) {
             setPhase(lastPhase);
@@ -384,7 +383,7 @@ public class BoardController {
             if(this.currentPlayer.getSoldiers() > 0){
                 country.addSoldiersInside(1);
                 this.currentPlayer.removeSoldiers(1);
-                view.setSoldierLabel("Soldiers: " + country.getSoldiersInside());
+                view.setSoldierIcons(country.getSoldiersInside());
                 view.setSoldierIcons(country.getSoldiersInside());
                 boardView.setCurrentPhaseLabel(getPhase() + " " + this.currentPlayer.getName() + " "
                         + this.currentPlayer.getSoldiers() + " Soldier(s)");
@@ -520,6 +519,7 @@ public class BoardController {
 
     public void endTurn() {
         changePlayer();
+        revolt();
         turn = this.currentPlayer.getName() + "'s Turn";
         boardView.setPlayerTurnLabel(turn);
         setPhase("New Troops Phase");
@@ -591,4 +591,83 @@ public class BoardController {
     }
 
 
+/* Die lokale Bevölkerung beginnt einen Aufstand gegen Ihre Eroberer.
+In seltenen Fällen kommt es vor, dass sich die Bevölkerung eines Territoriums wehrt.
+Dieses Ereignis findet zu Beginn einer Runde statt und der/die Spieler:in muss gegen den Aufstand würfeln.
+Je nach Stärke der stationierten Armee und Pech beim Würfeln kann es passieren,
+dass ein Gebiet so wieder neutral wird oder die lokale Armee verringert. */
+
+    //extension aufstand
+    public void revolt() {
+
+        if (!"board4".equals(this.boardChoice) && !"board5".equals(this.boardChoice)) {
+            System.out.println("Revolts are only available on board 4 and board 5.");
+            return;
+        }
+
+
+        if (Math.random() > 0.1) {
+            System.out.println("No revolt this round.");
+            return;
+        }
+
+        List<Country> playerCountries = new ArrayList<>();
+        for (Country country : allCountries.values()) {
+
+            if (country.getOwner() == getCurrentPlayer()) {
+                playerCountries.add(country);
+            }
+        }
+        if (playerCountries.isEmpty()) {
+            System.out.println("No countries available for revolt.");
+            return;
+        }
+
+        Random random = new Random();
+        Country revoltingCountry = playerCountries.get(random.nextInt(playerCountries.size()));
+
+        int soldiers = revoltingCountry.getSoldiersInside();
+        int revoltStrength = random.nextInt(3) + 1;
+        System.out.println("Revolt in " + revoltingCountry.getName() + "! Population resists with strength: " + revoltStrength);
+
+        if (revoltStrength >= soldiers) {
+            System.out.println("The population of " + revoltingCountry.getName() + " overthrows the occupiers!");
+            revoltingCountry.setOwner(null);
+            revoltingCountry.setSoldiersInside(0);
+
+        } else {
+            revoltingCountry.setSoldiersInside(soldiers - revoltStrength);
+            System.out.println("The army in " + revoltingCountry.getName() + " is reduced to " +
+                    revoltingCountry.getSoldiersInside() + " soldiers.");
+        }
+
+        CountryView countryView = allCountryViews.get(revoltingCountry.getName());
+        if (countryView != null) {
+            countryView.updateCountryPanel();
+        }
+    }
+    /*Wenn ein/e Spieler:in ein neutrales Territorium erobert besteht die Chance,
+    dass sich die lokale Bevölkerung der Armee anschließt
+            (z.B 1 - 3 zusätzliche Einheiten). Überlegen Sie sich hier eine sinnvolle Balance,
+            wie dieses Ereignis zustande kommen kann.*/
+
+    public int getAdditionalUnits() {
+        double chance = 0.2;
+        if (Math.random() < chance) {
+            return (int) (Math.random() * 3) + 1;
+        }
+        return 0;
+    }
+//TODO: Widerstand
+/*Beim Angriff eines neutralen Territoriums kann es vorkommen, dass die lokale Bevölkerung über eine eigene Armee verfügt.
+    Anstatt eines 2-seitigen Würfels, wehrt sich das Gebiet mit einem 6-seitigen Würfel gegen den Angriff.
+    Bei einem Sieg über die lokale Armee erhält der/die Spieler:in eine Karte wie bei einem Sieg über einen andere/n Spieler:in.*/
+    //TODO: naturkatastrophen falls noch zeit
+    /*Füge zufällige Ereignisse wie Erdbeben, Vulkanausbrüche, Überschwemmungen,... hinzu, die Territorien beeinträchtigen
+    und Armeen zerstören. Die Spieler:innen können wenige oder viele Naturkatastrophen ihrem Spiel zu Beginn hinzufügen
+    (Auswahl: keine, wenige oder viele).
+Es wird entweder alle x Runden (wenige) oder jede Runde (viele) ein zufälliges Territorium ausgewählt, in welchem eine
+Naturkatastrophe stattfindet. Je nach Territorium können nur bestimmte Ereignisse dort stattfinden.
+In dem betroffenen Territorium werden x Armeen (z.B.: 1-3) zerstört. Sollte das Territorium keine Armeen mehr haben,
+wird es neutral.*/
 }

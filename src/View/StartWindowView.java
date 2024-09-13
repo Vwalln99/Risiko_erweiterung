@@ -145,10 +145,10 @@ public class StartWindowView implements ActionListener {
         playerColorButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 2, 10));
 
         // create color buttons
-        playerColorButton1[playerNumber - 1] = createButton("", new Color(61, 194, 87), "player" + playerNumber + "ColorButton1");
-        playerColorButton2[playerNumber - 1] = createButton("", new Color(60, 101, 195), "player" + playerNumber + "ColorButton2");
-        playerColorButton3[playerNumber - 1] = createButton("", new Color(197, 60, 58), "player" + playerNumber + "ColorButton3");
-        playerColorButton4[playerNumber - 1] = createButton("", new Color(80, 60, 88), "player" + playerNumber + "ColorButton4");
+        playerColorButton1[playerNumber - 1] = createButton("", new Color(129, 230, 148), "player" + playerNumber + "ColorButton1");
+        playerColorButton2[playerNumber - 1] = createButton("", new Color(141, 169, 230), "player" + playerNumber + "ColorButton2");
+        playerColorButton3[playerNumber - 1] = createButton("", new Color(228, 160, 159), "player" + playerNumber + "ColorButton3");
+        playerColorButton4[playerNumber - 1] = createButton("", new Color(202, 150, 223), "player" + playerNumber + "ColorButton4");
 
         playerColorButtonPanel.add(playerColorButton1[playerNumber - 1]);
         playerColorButtonPanel.add(playerColorButton2[playerNumber - 1]);
@@ -181,9 +181,9 @@ public class StartWindowView implements ActionListener {
         board1 = createButton("Board 1", null, "board1");
         board2 = createButton("Board 2", null, "board2");
         board3 = createButton("Board 3", null, "board3");
-        board4 = createButton("Board 4", null, "board4");
-        board5 = createButton("Board 5", null, "board5");
-        board6 = createButton("Board 6", null, "board6");
+        board4 = createButton("Board 4 - Aufstand", null, "board4");
+        board5 = createButton("Board 5 - Aufstand", null, "board5");
+        board6 = createButton("Board 6 - Test", null, "board6");
 
         JButton startButton = new JButton("Start Game");
         startButton.addActionListener(this);

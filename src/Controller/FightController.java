@@ -131,6 +131,8 @@ public class FightController {
 
         view.setAttackerLosses("Attacker loses: " + attackerLosses + " Soldier(s)");
         view.setDefenderLosses("Defender loses: " + defenderLosses + " Soldier(s)");
+        boardController.getCurrentPlayer().receiveRandomCard();
+        boardController.getCurrentPlayer().checkAndTradeCards();
 
         //new: added logic for neutral countries
         if(defendingCountry.getSoldiersInside() == 0){
@@ -138,6 +140,8 @@ public class FightController {
                 attackingCountry.setOwner(boardController.getCurrentPlayer());
                 defendingCountry.setOwner(boardController.getCurrentPlayer());
                 defendingCountry.addSoldiersInside(attackingCountry.getSoldiersInside() - 1);
+                int additionalUnits = boardController.getAdditionalUnits();
+                defendingCountry.addSoldiersInside(additionalUnits);
                 attackingCountry.setSoldiersInside(1);
 
                 boardController.getCurrentPlayer().receiveRandomCard();
