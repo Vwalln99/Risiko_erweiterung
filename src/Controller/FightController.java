@@ -80,6 +80,16 @@ public class FightController {
         return (int)(Math.random() * 2) + 1;
     }
 
+    //TODO: Widerstand
+/*Beim Angriff eines neutralen Territoriums kann es vorkommen, dass die lokale Bevölkerung über eine eigene Armee verfügt.
+    Anstatt eines 2-seitigen Würfels, wehrt sich das Gebiet mit einem 6-seitigen Würfel gegen den Angriff.
+    Bei einem Sieg über die lokale Armee erhält der/die Spieler:in eine Karte wie bei einem Sieg über einen andere/n Spieler:in.*/
+
+    public boolean strongResistance() {
+        double chance = 0.3;
+        return Math.random() < chance;
+    }
+
     // Rolls a dice for every attacker and defender and sorts them from high to low
     public void fight(FightView view) {
         Integer[] a_dice = new Integer[attackingSoldiers];
@@ -91,9 +101,17 @@ public class FightController {
 
         Integer[] d_dice = new Integer[defendingSoldiers];
         if (defendingCountry.getOwner() == null) {
-            // Neutral territory defense
+        if (strongResistance()) {
+            //strong resistance
             d_dice = new Integer[1];
-            d_dice[0] = rollDefenseDice();
+            d_dice[0] = rollDice(); //6 site dice
+            view.setDefenderDiceLabel("Defender Roll (Strong Resistance): " + Helper.setLabelContent(d_dice));
+        } else {
+            // normal resistance
+            d_dice = new Integer[1];
+            d_dice[0] = rollDefenseDice(); //2 site dice
+            view.setDefenderDiceLabel("Defender Roll (Weak Resistance): " + Helper.setLabelContent(d_dice));
+        }
         } else {
             // Normal territory defense
             for (int i = 0; i < defendingSoldiers; i++) {

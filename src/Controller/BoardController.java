@@ -658,10 +658,7 @@ dass ein Gebiet so wieder neutral wird oder die lokale Armee verringert. */
         }
         return 0;
     }
-//TODO: Widerstand
-/*Beim Angriff eines neutralen Territoriums kann es vorkommen, dass die lokale Bevölkerung über eine eigene Armee verfügt.
-    Anstatt eines 2-seitigen Würfels, wehrt sich das Gebiet mit einem 6-seitigen Würfel gegen den Angriff.
-    Bei einem Sieg über die lokale Armee erhält der/die Spieler:in eine Karte wie bei einem Sieg über einen andere/n Spieler:in.*/
+
     //TODO: naturkatastrophen falls noch zeit
     /*Füge zufällige Ereignisse wie Erdbeben, Vulkanausbrüche, Überschwemmungen,... hinzu, die Territorien beeinträchtigen
     und Armeen zerstören. Die Spieler:innen können wenige oder viele Naturkatastrophen ihrem Spiel zu Beginn hinzufügen
