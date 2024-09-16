@@ -107,7 +107,7 @@ public class FightController {
             d_dice[0] = rollDice(); //6 site dice
             view.setDefenderDiceLabel("Defender Roll (Strong Resistance): " + Helper.setLabelContent(d_dice));
         } else {
-            // normal resistance
+            // weak resistance
             d_dice = new Integer[1];
             d_dice[0] = rollDefenseDice(); //2 site dice
             view.setDefenderDiceLabel("Defender Roll (Weak Resistance): " + Helper.setLabelContent(d_dice));
